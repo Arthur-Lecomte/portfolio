@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import AboutPage from '../../components/AboutPage.astro';
+import { site } from '../../data/site';
+---
+
+<Base
+  locale="en"
+  title={`About — ${site.name}`}
+  description={`Who I am, my background, what I use and how I work with AI.`}
+>
+  <AboutPage locale="en" />
+</Base>

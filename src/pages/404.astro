@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  locale="fr"
+  title={`Page introuvable — ${site.name}`}
+  description="Page introuvable."
+  altPath={null}
+>
+  <h1>Page introuvable</h1>
+  <p>Cette page n’existe pas, ou plus.</p>
+  <p lang="en">This page does not exist, or not anymore.</p>
+  <p class="links">
+    <a href="/">Retour à l’accueil</a> ·{' '}
+    <a href="/en/" lang="en">
+      Back to the home page
+    </a>
+  </p>
+</Base>

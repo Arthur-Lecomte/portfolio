@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import HomePage from '../../components/HomePage.astro';
+import { site } from '../../data/site';
+
+const description =
+  `${site.name}, ${site.role.en} — ${site.location.en}.` +
+  (site.availability === 'open' ? ` ${site.availabilityText.en}` : '');
+---
+
+<Base locale="en" title={`${site.name} — ${site.role.en}`} description={description}>
+  <HomePage locale="en" />
+</Base>

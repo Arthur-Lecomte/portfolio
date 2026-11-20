@@ -110,6 +110,139 @@ a:hover {
   border: 0;
 }
 
+/* ---------- Site chrome ---------- */
+
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-sm) var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.brand {
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.site-nav {
+  list-style: none;
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  font-size: var(--text-sm);
+}
+
+.site-nav a {
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.site-nav a:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.site-nav a[aria-current='page'] {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.lang-switch {
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 0.15rem 0.45rem;
+  color: var(--color-muted);
+}
+
+main.container {
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-2xl);
+}
+
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
+.site-footer-inner {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-lg) var(--space-md);
+  display: grid;
+  gap: var(--space-sm);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin: 0;
+  padding: 0;
+}
+
+.colophon {
+  margin: 0;
+  max-width: none;
+}
+
+/* ---------- Shared components ---------- */
+
+.btn {
+  display: inline-block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  padding: 0.55rem 1rem;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+
+.btn-secondary {
+  border-color: var(--color-border);
+  color: var(--color-text);
+  background: var(--color-surface);
+}
+
+.empty-state {
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  color: var(--color-muted);
+  text-align: center;
+  font-size: var(--text-sm);
+  max-width: none;
+}
+
+.meta {
+  font-size: var(--text-sm);
+  color: var(--color-muted);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

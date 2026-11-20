@@ -1,0 +1,31 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectDetail from '../../components/ProjectDetail.astro';
+import { site } from '../../data/site';
+import { getPublishedProjects, projectSlug, type Project } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const projects = await getPublishedProjects();
+  return projects.map((project, i) => ({
+    params: { slug: projectSlug(project) },
+    props: {
+      project,
+      // List is newest-first: "previous" points to the older project.
+      prev: projects[i + 1] ?? null,
+      next: projects[i - 1] ?? null,
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  prev: Project | null;
+  next: Project | null;
+}
+
+const { project, prev, next } = Astro.props;
+---
+
+<Base locale="fr" title={`${project.data.title} — ${site.name}`} description={project.data.summary}>
+  <ProjectDetail locale="fr" project={project} prev={prev} next={next} />
+</Base>

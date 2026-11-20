@@ -1,0 +1,51 @@
+---
+import Base from '../../../layouts/Base.astro';
+import ProjectDetail from '../../../components/ProjectDetail.astro';
+import { site } from '../../../data/site';
+import {
+  getPublishedProjects,
+  getEnglishText,
+  projectSlug,
+  type Project,
+  type ProjectEn,
+} from '../../../lib/projects';
+
+export async function getStaticPaths() {
+  const projects = await getPublishedProjects();
+  const english = await Promise.all(projects.map((p) => getEnglishText(projectSlug(p))));
+  return projects.map((project, i) => ({
+    params: { slug: projectSlug(project) },
+    props: {
+      project,
+      english: english[i]!,
+      prev: projects[i + 1] ?? null,
+      next: projects[i - 1] ?? null,
+      prevTitle: english[i + 1]?.data.title,
+      nextTitle: english[i - 1]?.data.title,
+    },
+  }));
+}
+
+interface Props {
+  project: Project;
+  english: ProjectEn;
+  prev: Project | null;
+  next: Project | null;
+  prevTitle?: string;
+  nextTitle?: string;
+}
+
+const { project, english, prev, next, prevTitle, nextTitle } = Astro.props;
+---
+
+<Base locale="en" title={`${english.data.title} — ${site.name}`} description={english.data.summary}>
+  <ProjectDetail
+    locale="en"
+    project={project}
+    english={english}
+    prev={prev}
+    next={next}
+    prevTitle={prevTitle}
+    nextTitle={nextTitle}
+  />
+</Base>

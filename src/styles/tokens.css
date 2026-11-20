@@ -5,6 +5,69 @@
  * hardcode colors, fonts or sizes.
  */
 
+/*
+ * Inter, self-hosted (woff2, OFL license next to the files). Declared
+ * here rather than via Astro's Fonts API because the <Font> component
+ * injects an inline <style>, incompatible with the strict CSP.
+ * The fallback faces reuse the metric adjustments the Fonts API
+ * computed for Arial, so the layout barely shifts while Inter loads.
+ */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter/inter-latin-400.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter/inter-latin-600.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 600;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('../assets/fonts/inter/inter-latin-700.woff2') format('woff2');
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+  size-adjust: 107.1194%;
+  ascent-override: 90.4365%;
+  descent-override: 22.518%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  font-display: swap;
+  font-weight: 600;
+  font-style: normal;
+  size-adjust: 107.1194%;
+  ascent-override: 90.4365%;
+  descent-override: 22.518%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial Bold');
+  font-display: swap;
+  font-weight: 700;
+  font-style: normal;
+  size-adjust: 99.4914%;
+  ascent-override: 97.3703%;
+  descent-override: 24.2444%;
+  line-gap-override: 0%;
+}
+
 :root {
   color-scheme: light dark;
 
@@ -17,8 +80,8 @@
   --color-accent: #1f4fd8;
   --color-accent-contrast: #ffffff;
 
-  /* Typography — the Inter variable is provided by Astro's Fonts API */
-  --font-sans: var(--font-inter, 'Inter'), system-ui, sans-serif;
+  /* Typography */
+  --font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
   --text-sm: 0.85rem;
   --text-base: 1rem;
   --text-lg: 1.15rem;

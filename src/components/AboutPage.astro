@@ -1,0 +1,149 @@
+---
+/**
+ * About page: short presentation, how Arthur works with AI, career
+ * timeline and stack by category. Career and stack come from
+ * src/data/cv.ts (mirroring the CV); nothing is hardcoded here.
+ */
+import { site } from '../data/site';
+import { experience, education, stack } from '../data/cv';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const texts = {
+  fr: {
+    title: 'À propos',
+    intro:
+      'Je m’appelle Arthur Lecomte, développeur logiciel junior formé en C# et Java. J’ai appris le métier entre un BUT informatique, une alternance en développement d’applications scientifiques et deux stages, du mobile au serious game en VR. Je cherche un poste de développeur dans le Var, autour de Toulon, ou en télétravail.',
+    aiTitle: 'Ma façon de travailler avec l’IA',
+    aiText:
+      'Les projets de ce site sont développés avec l’assistance d’une IA, et je l’assume : c’est un outil de mon époque, et savoir s’en servir fait partie de ce que je montre ici. Concrètement, je cadre le travail, je découpe, je relis et je teste ce qu’elle produit — et ce qui est publié reste ma responsabilité.',
+    careerTitle: 'Parcours',
+    educationTitle: 'Formation',
+    stackTitle: 'Ce que je pratique',
+  },
+  en: {
+    title: 'About',
+    intro:
+      'I’m Arthur Lecomte, a junior software developer trained in C# and Java. I learned the job through a three-year computer science degree, a work-study position building scientific applications and two internships, from mobile to a VR serious game. I’m looking for a developer position in the Var, around Toulon, or remote.',
+    aiTitle: 'How I work with AI',
+    aiText:
+      'The projects on this site are developed with AI assistance, and I’m upfront about it: it’s a tool of my time, and knowing how to use it well is part of what I show here. In practice, I frame the work, break it down, review and test what it produces — and what gets published remains my responsibility.',
+    careerTitle: 'Career',
+    educationTitle: 'Education',
+    stackTitle: 'What I use',
+  },
+}[locale];
+---
+
+<h1>{texts.title}</h1>
+<p>{texts.intro}</p>
+{site.availability === 'open' && <p class="avail">{site.availabilityText[locale]}</p>}
+
+<section aria-labelledby="ai-title">
+  <h2 id="ai-title">{texts.aiTitle}</h2>
+  <p>{texts.aiText}</p>
+</section>
+
+<section aria-labelledby="career-title">
+  <h2 id="career-title">{texts.careerTitle}</h2>
+  <ol class="timeline">
+    {experience.map((e) => (
+      <li>
+        <p class="meta">
+          {e.period[locale]} · {e.kind[locale]}
+        </p>
+        <h3>
+          {e.title[locale]} — {e.org}
+        </h3>
+        <p>{e.description[locale]}</p>
+        <p class="meta">{e.tech.join(' · ')}</p>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section aria-labelledby="education-title">
+  <h2 id="education-title">{texts.educationTitle}</h2>
+  <ol class="timeline">
+    {education.map((e) => (
+      <li>
+        <p class="meta">{e.period}</p>
+        <h3>
+          {e.title[locale]} — {e.place}
+        </h3>
+        {e.note && <p class="meta">{e.note[locale]}</p>}
+      </li>
+    ))}
+  </ol>
+</section>
+
+<section aria-labelledby="stack-title">
+  <h2 id="stack-title">{texts.stackTitle}</h2>
+  <dl class="stack">
+    {stack.map((cat) => (
+      <div>
+        <dt>{cat.category[locale]}</dt>
+        <dd>{cat.items[locale].join(' · ')}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<style>
+  .avail {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  section {
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+  }
+
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .timeline li {
+    border-left: 2px solid var(--color-border);
+    padding-left: var(--space-md);
+  }
+
+  .timeline h3 {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .timeline .meta {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .timeline p {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .stack {
+    margin: 0;
+    display: grid;
+    gap: var(--space-sm);
+  }
+
+  .stack dt {
+    font-weight: 600;
+  }
+
+  .stack dd {
+    margin: 0;
+    color: var(--color-muted);
+  }
+</style>

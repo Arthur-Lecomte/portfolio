@@ -1,0 +1,13 @@
+---
+import Base from '../../layouts/Base.astro';
+import ProjectsList from '../../components/ProjectsList.astro';
+import { site } from '../../data/site';
+---
+
+<Base
+  locale="fr"
+  title={`Projets — ${site.name}`}
+  description={`Les projets personnels de ${site.name}, petits et grands, avec démos quand c’est possible.`}
+>
+  <ProjectsList locale="fr" />
+</Base>

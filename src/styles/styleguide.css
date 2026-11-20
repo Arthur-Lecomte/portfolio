@@ -183,33 +183,8 @@
   flex-wrap: wrap;
 }
 
-.btn {
-  font-size: var(--text-sm);
-  text-decoration: none;
-  border-radius: var(--radius-sm);
-  padding: 0.55rem 1rem;
-  border: 1px solid transparent;
-}
-
-.btn-primary {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
-}
-
-.btn-secondary {
-  border-color: var(--color-border);
-  color: var(--color-text);
-  background: var(--color-surface);
-}
-
-.empty-state {
-  border: 1px dashed var(--color-border);
-  border-radius: var(--radius-md);
-  padding: var(--space-lg);
-  color: var(--color-muted);
-  text-align: center;
-  font-size: var(--text-sm);
-}
+/* .btn and .empty-state come from global.css — the mocks reuse the
+   real production classes. */
 
 /* Type scale table */
 
