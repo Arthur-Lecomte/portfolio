@@ -1,4 +1,5 @@
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import { siteUrl } from './src/data/site';
 
 // NOTE: fonts are declared manually in src/styles/tokens.css instead of
@@ -7,6 +8,18 @@ import { siteUrl } from './src/data/site';
 
 export default defineConfig({
   site: siteUrl,
+
+  integrations: [
+    sitemap({
+      // The sitemap's i18n block is independent from Astro's own i18n
+      // config — keep both in sync. Keys match path prefixes.
+      i18n: {
+        defaultLocale: 'fr',
+        locales: { fr: 'fr-FR', en: 'en-US' },
+      },
+      filter: (page) => !page.includes('/404'),
+    }),
+  ],
 
   i18n: {
     locales: ['fr', 'en'],

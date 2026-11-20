@@ -1,0 +1,19 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 30000,
+    "chromeLaunchConfig": {
+      "args": ["--no-sandbox", "--disable-dev-shm-usage"]
+    }
+  },
+  "urls": [
+    "http://localhost:4321/",
+    "http://localhost:4321/projets/",
+    "http://localhost:4321/a-propos/",
+    "http://localhost:4321/mentions-legales/",
+    "http://localhost:4321/confidentialite/",
+    "http://localhost:4321/en/",
+    "http://localhost:4321/en/projets/",
+    "http://localhost:4321/404.html"
+  ]
+}

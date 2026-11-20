@@ -23,7 +23,11 @@ export const site = {
     en: 'Var, near Toulon (South of France)',
   },
 
-  availability: 'open' as Availability,
+  /**
+   * The SITE_AVAILABILITY env var overrides this at build time — used
+   * only by scripts/test-states.mjs to build every state in CI.
+   */
+  availability: (process.env.SITE_AVAILABILITY ?? 'open') as Availability,
 
   /** Shown on the home page and in meta descriptions when availability is 'open'. */
   availabilityText: {
