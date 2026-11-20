@@ -3,6 +3,20 @@
 Trois lignes par décision : le problème, l'option retenue, pourquoi.
 Les plus récentes en haut.
 
+## 2026-11-20 — Direction visuelle B « Moderne neutre » (ARRÊT 2)
+
+Trois directions étaient proposées sur /styleguide ; Arthur a choisi la B.
+Retenu : Inter seule (400/600/700), palette neutre, accent bleu encre #1f4fd8
+(clair) / #8ab0ff (sombre), tokens figés dans `src/styles/tokens.css`.
+Les polices candidates non retenues ont été supprimées du dépôt.
+
+## 2026-11-20 — Polices auto-hébergées via l'API Fonts d'Astro
+
+Il fallait servir Inter sans CDN (règle « aucun contenu tiers »).
+Retenu : woff2 Fontsource committés avec leur licence OFL, déclarés via
+`fonts` + `fontProviders.local()` dans astro.config.ts.
+L'API gère hachage, cache immuable, préchargement et polices de repli ajustées.
+
 ## 2026-11-20 — Pas de statistiques au lancement
 
 Fallait-il installer Plausible (~9 $/mois) dès le départ ?

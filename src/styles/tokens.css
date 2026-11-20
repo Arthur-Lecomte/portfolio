@@ -1,0 +1,55 @@
+/*
+ * Design tokens — direction B « Moderne neutre », chosen at ARRÊT 2.
+ * Single accent color, near-neutral palette, Inter only.
+ * Every visual constant of the site lives here; components must not
+ * hardcode colors, fonts or sizes.
+ */
+
+:root {
+  color-scheme: light dark;
+
+  /* Colors — light */
+  --color-bg: #ffffff;
+  --color-text: #16181d;
+  --color-muted: #565b64;
+  --color-surface: #f4f5f7;
+  --color-border: #e4e6ea;
+  --color-accent: #1f4fd8;
+  --color-accent-contrast: #ffffff;
+
+  /* Typography — the Inter variable is provided by Astro's Fonts API */
+  --font-sans: var(--font-inter, 'Inter'), system-ui, sans-serif;
+  --text-sm: 0.85rem;
+  --text-base: 1rem;
+  --text-lg: 1.15rem;
+  --text-xl: 1.5rem;
+  --text-2xl: clamp(1.7rem, 3.5vw, 2.1rem);
+  --text-3xl: clamp(2.1rem, 5vw, 2.9rem);
+  --leading-body: 1.65;
+  --leading-tight: 1.15;
+  --measure: 65ch;
+
+  /* Spacing and shape */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1.25rem;
+  --space-lg: 2rem;
+  --space-xl: 3.25rem;
+  --space-2xl: 5rem;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --container: 46rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #101216;
+    --color-text: #e8eaee;
+    --color-muted: #9aa0ab;
+    --color-surface: #181b21;
+    --color-border: #2a2e36;
+    --color-accent: #8ab0ff;
+    --color-accent-contrast: #0c1f4d;
+  }
+}
