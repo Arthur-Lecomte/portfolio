@@ -9,6 +9,7 @@ kind: tool
 stack:
   - Astro
   - CSS
+demo: internal
 links:
   repo: 'https://github.com/Arthur-Lecomte/portfolio'
 cover: ./cover.png

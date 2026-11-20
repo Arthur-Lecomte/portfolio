@@ -1,0 +1,27 @@
+<!doctype html>
+<!--
+  Sample demo wired to the sample project — exercises the pipeline:
+  static files, relative paths, slug-prefixed localStorage, back link.
+  Rules: docs/demos.md.
+-->
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Démo — Projet exemple</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Démo du projet exemple</h1>
+      <p>Un compteur, rien de plus. Il vérifie que le pipeline des démos fonctionne.</p>
+      <button id="bump" type="button">Cliquer</button>
+      <p aria-live="polite">Total : <output id="count">0</output></p>
+      <button id="reset" type="button">Remettre à zéro</button>
+    </main>
+    <footer>
+      <a href="../../projets/projet-exemple/">← Retour à la fiche du projet</a>
+    </footer>
+    <script src="main.js"></script>
+  </body>
+</html>
