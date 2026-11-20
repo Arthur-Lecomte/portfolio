@@ -1,54 +1,18 @@
 ---
 /**
- * Working page for choosing the visual direction (ARRÊT 2).
+ * Token reference for the chosen direction (B — « Moderne neutre »).
  * Dev-only: getStaticPaths returns no path in production builds, so
  * this page exists neither on the live site nor in host previews.
  */
+import { Font } from 'astro:assets';
 import { site } from '../../data/site';
+import '../../styles/global.css';
 import '../../styles/styleguide.css';
 
 export function getStaticPaths() {
   if (import.meta.env.PROD) return [];
   return [{ params: { slug: undefined } }];
 }
-
-interface Direction {
-  id: string;
-  label: string;
-  name: string;
-  pitch: string;
-  stackFont: string;
-}
-
-const directions: Direction[] = [
-  {
-    id: 'a',
-    label: 'Direction A',
-    name: 'Éditorial classique',
-    pitch:
-      'Titres en serif, texte en sans, accent bordeaux. L’ambiance d’une belle revue : ' +
-      'calme, littéraire, très lisible. La plus « papier » des trois.',
-    stackFont: 'Source Serif 4 (titres) + Inter (texte)',
-  },
-  {
-    id: 'b',
-    label: 'Direction B',
-    name: 'Moderne neutre',
-    pitch:
-      'Une seule police, beaucoup de blanc, accent bleu encre. Sobre et direct, ' +
-      'proche de la documentation bien faite. La plus discrète des trois.',
-    stackFont: 'Inter partout',
-  },
-  {
-    id: 'c',
-    label: 'Direction C',
-    name: 'Technique discret',
-    pitch:
-      'Texte en Public Sans, détails (dates, technos) en police à chasse fixe, accent vert. ' +
-      'Un léger clin d’œil au code, sans déguisement de terminal.',
-    stackFont: 'Public Sans + JetBrains Mono (détails)',
-  },
-];
 ---
 
 <!doctype html>
@@ -57,137 +21,146 @@ const directions: Direction[] = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
+    <Font cssVariable="--font-inter" preload />
     <title>Styleguide — {site.name}</title>
   </head>
   <body>
     <div class="sg-intro">
-      <h1>Styleguide — trois directions</h1>
+      <h1>Styleguide — direction B figée</h1>
       <p>
-        Page de travail, visible uniquement en local. Chaque bloc montre la typographie, les
-        couleurs, l’en-tête, une carte projet et le haut de l’accueil sans aucun projet publié.
-      </p>
-      <p>
-        Les couleurs des maquettes suivent le réglage clair/sombre de ton système ; les deux
-        palettes sont aussi affichées côte à côte dans chaque bloc.
+        Référence des tokens retenus (« Moderne neutre » : Inter partout, accent bleu encre). Page
+        de travail, visible uniquement en local. Les tokens vivent dans
+        <code>src/styles/tokens.css</code>.
       </p>
     </div>
 
-    {directions.map((d) => (
-      <section class={`dir dir-${d.id}`}>
-        <div class="dir-inner">
-          <header>
-            <p class="dir-label">{d.label}</p>
-            <h2 class="dir-name">{d.name}</h2>
-            <p class="dir-pitch">{d.pitch}</p>
-            <p class="specimen-meta">{d.stackFont}</p>
-          </header>
+    <section class="sg-section">
+      <h2 class="block-title">Typographie</h2>
+      <div class="scale-row">
+        <code>--text-3xl</code>
+        <span style="font-size: var(--text-3xl); font-weight: 700">{site.name}</span>
+      </div>
+      <div class="scale-row">
+        <code>--text-2xl</code>
+        <span style="font-size: var(--text-2xl); font-weight: 700">Titre de page</span>
+      </div>
+      <div class="scale-row">
+        <code>--text-xl</code>
+        <span style="font-size: var(--text-xl); font-weight: 600">Titre de section</span>
+      </div>
+      <div class="scale-row">
+        <code>--text-lg</code>
+        <span style="font-size: var(--text-lg); font-weight: 600">Titre de carte</span>
+      </div>
+      <div class="scale-row">
+        <code>--text-base</code>
+        <span>Texte courant, interligne 1,65, mesure 65ch.</span>
+      </div>
+      <div class="scale-row">
+        <code>--text-sm</code>
+        <span class="specimen-meta">Texte secondaire — dates, légendes, métadonnées</span>
+      </div>
+    </section>
 
-          <div>
-            <h3 class="block-title">Typographie</h3>
-            <p class="specimen-h1">{site.name}</p>
-            <h4 class="specimen-h2">Un intertitre de fiche projet</h4>
-            <p class="specimen-body">
-              Développeur logiciel junior, formé en C# et Java. Un an d’alternance et deux stages en
-              conception d’applications métier : la ligne de texte courante doit rester confortable
-              à lire, autour de soixante-cinq caractères, avec un
-              <a class="sample-link" href="#top">
-                lien dans la couleur d’accent
-              </a>
-              .
-            </p>
-            <p class="specimen-meta">Texte secondaire — dates, légendes, métadonnées</p>
-          </div>
-
-          <div>
-            <h3 class="block-title">Couleurs</h3>
-            <div class="palettes">
-              <div class="palette mode-light">
-                <h4>Mode clair</h4>
-                <span class="chip">
-                  <i style={`background: var(--pl-bg)`} /> Fond
-                </span>
-                <span class="chip">
-                  <i style={`background: var(--pl-text)`} /> Texte
-                </span>
-                <span class="chip">
-                  <i style={`background: var(--pl-muted)`} /> Texte secondaire
-                </span>
-                <span class="chip">
-                  <i style={`background: var(--pl-accent)`} /> Accent
-                </span>
-              </div>
-              <div class="palette mode-dark">
-                <h4>Mode sombre</h4>
-                <span class="chip">
-                  <i style={`background: var(--pd-bg)`} /> Fond
-                </span>
-                <span class="chip">
-                  <i style={`background: var(--pd-text)`} /> Texte
-                </span>
-                <span class="chip">
-                  <i style={`background: var(--pd-muted)`} /> Texte secondaire
-                </span>
-                <span class="chip">
-                  <i style={`background: var(--pd-accent)`} /> Accent
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="block-title">En-tête du site</h3>
-            <div class="mock-header">
-              <span class="mock-brand">{site.name}</span>
-              <nav class="mock-nav">
-                <a href="#top">Projets</a>
-                <a href="#top">À propos</a>
-                <a href="#top">CV</a>
-                <span class="lang">EN</span>
-              </nav>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="block-title">Carte projet</h3>
-            <article class="mock-card">
-              <div class="mock-cover">image de couverture</div>
-              <div class="mock-card-body">
-                <h3>Titre du projet</h3>
-                <p>Une phrase sans jargon qui dit ce que fait le projet.</p>
-                <span class="specimen-meta">2026 · C# · Unity</span>
-              </div>
-            </article>
-          </div>
-
-          <div>
-            <h3 class="block-title">Accueil, sans aucun projet publié</h3>
-            <div class="mock-hero">
-              <h3>{site.name}</h3>
-              <p class="hero-role">
-                {site.role.fr} — {site.location.fr}
-              </p>
-              <p class="hero-text">
-                Formé en C# et Java, je développe des applications métier. Ce site rassemble mes
-                projets personnels.
-              </p>
-              <p class="hero-avail">{site.availabilityText.fr}</p>
-              <div class="hero-actions">
-                <a class="btn btn-primary" href="#top">
-                  Télécharger le CV
-                </a>
-                <a class="btn btn-secondary" href="#top">
-                  M’écrire
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="block-title">Page projets, état vide</h3>
-            <p class="empty-state">Aucun projet publié pour le moment.</p>
-          </div>
+    <section class="sg-section">
+      <h2 class="block-title">Couleurs</h2>
+      <div class="palettes">
+        <div class="palette mode-light">
+          <h3>Mode clair</h3>
+          <span class="chip">
+            <i style="background: #ffffff"></i> Fond #ffffff
+          </span>
+          <span class="chip">
+            <i style="background: #16181d"></i> Texte #16181d
+          </span>
+          <span class="chip">
+            <i style="background: #565b64"></i> Secondaire #565b64
+          </span>
+          <span class="chip">
+            <i style="background: #f4f5f7"></i> Surface #f4f5f7
+          </span>
+          <span class="chip">
+            <i style="background: #e4e6ea"></i> Bordure #e4e6ea
+          </span>
+          <span class="chip">
+            <i style="background: #1f4fd8"></i> Accent #1f4fd8
+          </span>
         </div>
-      </section>
-    ))}
+        <div class="palette mode-dark">
+          <h3>Mode sombre</h3>
+          <span class="chip">
+            <i style="background: #101216"></i> Fond #101216
+          </span>
+          <span class="chip">
+            <i style="background: #e8eaee"></i> Texte #e8eaee
+          </span>
+          <span class="chip">
+            <i style="background: #9aa0ab"></i> Secondaire #9aa0ab
+          </span>
+          <span class="chip">
+            <i style="background: #181b21"></i> Surface #181b21
+          </span>
+          <span class="chip">
+            <i style="background: #2a2e36"></i> Bordure #2a2e36
+          </span>
+          <span class="chip">
+            <i style="background: #8ab0ff"></i> Accent #8ab0ff
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="sg-section">
+      <h2 class="block-title">En-tête du site</h2>
+      <div class="mock-header">
+        <span class="mock-brand">{site.name}</span>
+        <nav class="mock-nav">
+          <a href="#top">Projets</a>
+          <a href="#top">À propos</a>
+          <a href="#top">CV</a>
+          <span class="lang">EN</span>
+        </nav>
+      </div>
+    </section>
+
+    <section class="sg-section">
+      <h2 class="block-title">Carte projet</h2>
+      <article class="mock-card">
+        <div class="mock-cover">image de couverture</div>
+        <div class="mock-card-body">
+          <h3>Titre du projet</h3>
+          <p>Une phrase sans jargon qui dit ce que fait le projet.</p>
+          <span class="specimen-meta">2026 · C# · Unity</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="sg-section">
+      <h2 class="block-title">Accueil, sans aucun projet publié</h2>
+      <div class="mock-hero">
+        <h1>{site.name}</h1>
+        <p class="hero-role">
+          {site.role.fr} — {site.location.fr}
+        </p>
+        <p>
+          Formé en C# et Java, je développe des applications métier. Ce site rassemble mes projets
+          personnels.
+        </p>
+        <p class="hero-avail">{site.availabilityText.fr}</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#top">
+            Télécharger le CV
+          </a>
+          <a class="btn btn-secondary" href="#top">
+            M’écrire
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="sg-section">
+      <h2 class="block-title">Page projets, état vide</h2>
+      <p class="empty-state">Aucun projet publié pour le moment.</p>
+    </section>
   </body>
 </html>
