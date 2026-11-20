@@ -7,6 +7,11 @@ updates:
     directory: '/'
     schedule:
       interval: weekly
+    ignore:
+      # @astrojs/check only accepts typescript ^5 || ^6 — remove this
+      # once it supports 7.x (see closed PR #1).
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: '/'
