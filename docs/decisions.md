@@ -18,6 +18,13 @@ Fontsource committés (licence OFL incluse), `@font-face` écrits dans tokens.cs
 avec les métriques de repli calculées par l'API (copiées une fois), préchargement
 manuel dans le layout. Zéro inline, URLs hachées par Vite, même résultat.
 
+## 2026-11-20 — Mentions légales : régime de l'éditeur non professionnel
+
+Arthur refuse (à raison) de publier son adresse et son téléphone.
+Retenu : régime de l'art. 1-1, II LCEN — identité complète communiquée à
+l'hébergeur, le site n'affiche que nom + e-mail + coordonnées de Cloudflare.
+Analyse, sources et points à vérifier : docs/juridique.md.
+
 ## 2026-11-20 — Pas de statistiques au lancement
 
 Fallait-il installer Plausible (~9 $/mois) dès le départ ?

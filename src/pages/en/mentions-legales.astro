@@ -1,0 +1,58 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+
+<Base
+  locale="en"
+  title={`Legal notice — ${site.name}`}
+  description="Legal notice of this personal, non-professional website."
+>
+  <h1>Legal notice</h1>
+
+  <p class="meta">
+    This English version is provided for convenience. In case of any discrepancy,{' '}
+    <a href="/mentions-legales/">the French version</a> prevails.
+  </p>
+
+  <h2>Publisher</h2>
+  <p>
+    This is a personal website, published on a non-professional basis within the meaning of Article
+    1-1, II of French law n° 2004-575 of 21 June 2004 (LCEN).
+  </p>
+  <p>
+    Publisher: {site.name} — contact: <a href={`mailto:${site.email}`}>{site.email}</a>.<br />
+    Publication director: the publisher.
+  </p>
+  <p>
+    In accordance with that article, the publisher's personal identification details have been
+    provided to the hosting provider, which is bound by professional secrecy.
+  </p>
+
+  <h2>Hosting provider</h2>
+  <p>
+    Cloudflare, Inc.
+    <br />
+    101 Townsend St., San Francisco, CA 94107, USA
+    <br />
+    Phone: +1 650 319 8930 — www.cloudflare.com
+  </p>
+
+  <h2>Intellectual property</h2>
+  <p>
+    The source code of this site is released under the MIT license, in a{' '}
+    <a href={site.links.repo} rel="noopener noreferrer">
+      public repository
+    </a>
+    . Texts, images, screenshots and the CV remain the exclusive property of {site.name} — all
+    rights reserved. Any reuse requires prior written permission.
+  </p>
+
+  <h2>Reporting content</h2>
+  <p>
+    For any question or report about the content of this site, write to{' '}
+    <a href={`mailto:${site.email}`}>{site.email}</a>.
+  </p>
+
+  <p class="meta">Last updated: 20 November 2026.</p>
+</Base>

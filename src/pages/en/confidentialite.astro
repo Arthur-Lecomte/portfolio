@@ -1,0 +1,69 @@
+---
+import Base from '../../layouts/Base.astro';
+import { site } from '../../data/site';
+---
+
+<Base
+  locale="en"
+  title={`Privacy — ${site.name}`}
+  description="No cookies, no trackers: the publisher collects no browsing data."
+>
+  <h1>Privacy</h1>
+
+  <p class="meta">
+    This English version is provided for convenience. In case of any discrepancy,{' '}
+    <a href="/confidentialite/">the French version</a> prevails.
+  </p>
+
+  <p>
+    The short version: this site is fully static. It sets <strong>no cookies</strong>, embeds{' '}
+    <strong>no tracker and no analytics</strong>, and has no accounts, no forms and no third-party
+    content. That is also why there is no consent banner: there is nothing to consent to. The data
+    controller is the publisher of this site (see the legal notice).
+  </p>
+
+  <h2>Host technical logs</h2>
+  <p>
+    The site is served by Cloudflare, Inc. (USA). When you visit, Cloudflare processes technical
+    data (IP address, user-agent, request metadata, security logs) to deliver the pages and keep the
+    service secure (anti-DDoS, firewall) and fast. Legal basis: the publisher's legitimate interest
+    in providing a safe website (Article 6(1)(f) GDPR). Cloudflare acts as a processor and retains
+    these logs for a limited period, as described in its privacy policy; the publisher has no access
+    to raw logs.
+  </p>
+  <p>
+    Transfers outside the European Union: Cloudflare, Inc. states that it adheres to the EU-U.S.
+    Data Privacy Framework (adequacy decision (EU) 2023/1795 of 10 July 2023) and additionally
+    relies on the European Commission's standard contractual clauses.
+  </p>
+
+  <h2>Demo local storage</h2>
+  <p>
+    Some project demos save game progress or preferences in your browser's local storage — the{' '}
+    <code>localStorage</code>. That data stays on your device: nothing is sent anywhere, not to this
+    site nor to third parties. This strictly functional storage is exempt from consent under Article
+    82 of the French Data Protection Act. To clear it: the demo's reset button, or your browser
+    settings ("clear site data").
+  </p>
+
+  <h2>Emails</h2>
+  <p>
+    If you write to <a href={`mailto:${site.email}`}>{site.email}</a>, I receive your address and
+    your message. I only use them to reply, I pass them to no one, and I keep them no longer than
+    our exchange requires. Legal basis: the legitimate interest in answering the messages I am sent
+    (Article 6(1)(f) GDPR).
+  </p>
+
+  <h2>Your rights</h2>
+  <p>
+    You have the rights of access, rectification, erasure, objection and restriction provided by the
+    GDPR. To exercise them: <a href={`mailto:${site.email}`}>{site.email}</a>. You may also lodge a
+    complaint with the French supervisory authority, the CNIL, at{' '}
+    <a href="https://www.cnil.fr" rel="noopener noreferrer">
+      cnil.fr
+    </a>
+    .
+  </p>
+
+  <p class="meta">Last updated: 20 November 2026.</p>
+</Base>

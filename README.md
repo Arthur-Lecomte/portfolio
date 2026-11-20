@@ -28,6 +28,14 @@ npm run check     # vérification TypeScript
 
 Node 24 (LTS) ou plus récent.
 
+## Conformité
+
+Le site ne dépose aucun cookie, n'embarque aucun traceur ni contenu tiers, et
+ses mentions légales s'appuient sur l'article 1-1 de la LCEN (régime de
+l'éditeur non professionnel). Les sources juridiques (Légifrance, CNIL,
+décision d'adéquation UE-États-Unis) et les points de vigilance sont détaillés
+dans [docs/juridique.md](docs/juridique.md).
+
 ## Réglages hors dépôt
 
 À faire à la main sur les comptes concernés (rien dans le code n'en dépend) :
