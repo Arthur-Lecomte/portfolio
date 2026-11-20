@@ -10,7 +10,7 @@
  */
 
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
@@ -50,6 +50,19 @@ async function waitForServer(url, tries = 50) {
 let exitCode = 1;
 try {
   await waitForServer('http://localhost:4321/');
+
+  // Guard against a vacuous pass: pa11y-ci happily audits the 404 page
+  // of a mistyped or missing URL. Every tested URL must answer 200.
+  const { urls } = JSON.parse(readFileSync(`${root}/.pa11yci.json`, 'utf8'));
+  const missing = [];
+  for (const url of urls) {
+    const res = await fetch(url);
+    if (!res.ok) missing.push(`${url} -> HTTP ${res.status}`);
+  }
+  if (missing.length > 0) {
+    throw new Error(`URLs in .pa11yci.json do not resolve:\n  ${missing.join('\n  ')}`);
+  }
+
   exitCode = await new Promise((resolve) => {
     const pa11y = spawn('npx', ['pa11y-ci'], { cwd: root, shell: true, stdio: 'inherit' });
     pa11y.on('close', (code) => resolve(code ?? 1));

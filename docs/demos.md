@@ -52,4 +52,10 @@ téléchargement. Ces règles ne se contournent pas.
 
 L'analyse est volontairement « fail-closed » : une URL absolue légitime dans
 une chaîne JS fera échouer le build — c'est voulu, elle n'a rien à y faire.
-Les commentaires sont ignorés ; les namespaces `www.w3.org` sont tolérés.
+Les commentaires sont ignorés pour la détection d'URL (les bibliothèques
+embarquées citent leur site en en-tête) ; les namespaces `www.w3.org` sont
+tolérés. La vraie barrière reste la CSP servie sur `/demos/*` : tout
+chargement ou envoi vers un autre domaine est bloqué par le navigateur,
+service workers compris. Limite résiduelle assumée : une CSP ne bloque pas
+la _navigation_ (un lien ou `location.href` construit vers l'extérieur) —
+d'où la relecture humaine de tout code de démo avant publication.

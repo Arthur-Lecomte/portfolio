@@ -14,6 +14,7 @@
     "http://localhost:4321/confidentialite/",
     "http://localhost:4321/en/",
     "http://localhost:4321/en/projets/",
+    "http://localhost:4321/en/a-propos/",
     "http://localhost:4321/404.html"
   ]
 }

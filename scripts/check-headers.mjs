@@ -33,6 +33,10 @@ for (const [i, rawLine] of lines.entries()) {
       current.ops.push({ remove: true, name: t.slice(2).trim().toLowerCase() });
     } else {
       const idx = t.indexOf(':');
+      if (idx <= 0) {
+        errors.push(`line ${i + 1}: malformed header line "${t.slice(0, 60)}"`);
+        continue;
+      }
       current.ops.push({
         name: t.slice(0, idx).trim().toLowerCase(),
         value: t.slice(idx + 1).trim(),
@@ -94,8 +98,11 @@ function assertZone(path, checks) {
 assertZone('/', {
   "portfolio CSP forbids 'unsafe-inline'": (csp) => !csp.includes('unsafe-inline'),
   "portfolio CSP starts from default-src 'none'": (csp) => csp.includes("default-src 'none'"),
+  'portfolio CSP forbids all scripts (the site ships zero JS)': (csp) =>
+    csp.includes("script-src 'none'"),
   'portfolio CSP blocks framing': (csp) => csp.includes("frame-ancestors 'none'"),
   'portfolio CSP blocks forms': (csp) => csp.includes("form-action 'none'"),
+  'portfolio CSP blocks workers': (csp) => csp.includes("worker-src 'none'"),
   'portfolio CSP has no external host': (csp) => !/https?:\/\//.test(csp),
 });
 
@@ -105,6 +112,7 @@ assertZone('/demos/projet-exemple/main.js', {
   "demo CSP keeps connect-src 'self'": (csp) => csp.includes("connect-src 'self'"),
   'demo CSP blocks framing': (csp) => csp.includes("frame-ancestors 'none'"),
   'demo CSP blocks forms': (csp) => csp.includes("form-action 'none'"),
+  'demo CSP blocks service workers': (csp) => csp.includes("worker-src 'none'"),
   'demo CSP has no external host': (csp) => !/https?:\/\//.test(csp),
 });
 

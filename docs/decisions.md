@@ -3,6 +3,17 @@
 Trois lignes par décision : le problème, l'option retenue, pourquoi.
 Les plus récentes en haut.
 
+## 2026-11-20 — Durcissements issus de la relecture sécurité indépendante
+
+La relecture a trouvé : un test a11y qui pouvait « réussir » sur des 404, un
+contournement du scan des démos (un `"//"` dans une chaîne aveuglait la suite
+de la ligne) et des service workers bloqués par aucune couche. Retenu :
+`worker-src 'none'` dans les deux CSP, `script-src 'none'` côté portfolio
+(zéro JS assumé), scan sur texte brut sauf détection d'URL, détection wss://
+et des URL protocol-relative, lockfile de démo obligatoire, le test a11y
+exige du 200 sur chaque URL, variables d'env de test validées, `sharp`
+déclaré en devDependency (il était utilisé via une dépendance transitive).
+
 ## 2026-11-20 — En-têtes : deux zones CSP via `_headers` + test simulé
 
 Chez Cloudflare, plusieurs règles qui matchent une URL combinent leurs
