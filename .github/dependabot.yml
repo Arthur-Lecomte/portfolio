@@ -1,0 +1,14 @@
+# Weekly dependency updates for the site, the GitHub Actions and, later,
+# each demo (demos keep their own package.json — add one entry per demo
+# directory when a demo with dependencies is created).
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
