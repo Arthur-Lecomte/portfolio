@@ -47,19 +47,25 @@ Sur GitHub → Settings → Branches → Add branch ruleset :
 Cloudflare recommande les **Workers** (static assets) pour les nouveaux
 sites — c'est ce que ce repo attend (`public/_headers` y est géré nativement).
 
-1. Sur dash.cloudflare.com → Compute (Workers) → Create → « Import a
-   repository » → connecte ton compte GitHub → choisis `portfolio`.
-   Limite l'accès de l'app GitHub à ce seul dépôt quand c'est proposé.
-2. Réglages de build :
-   - Build command : `npm run build`
-   - Deploy command : `npx wrangler deploy` (proposé par défaut)
-   - Non-production branch deploy command : `npx wrangler preview`
-     (cela active les URL de preview par PR)
-3. Si un fichier `wrangler.jsonc` est demandé, dis-le à Claude : il le
-   committera (contenu minimal : nom + `assets.directory: "./dist"`).
-4. Premier déploiement : vérifie l'URL `*.workers.dev` fournie — pages FR,
-   /en/, une page légale, et les en-têtes (F12 → Network → Headers :
-   une seule `Content-Security-Policy`).
+Vécu du 20/11/2026 : l'assistant « Créer une application → Importer un
+dépôt » peut échouer avec « This Worker does not exist on this account »
+après avoir créé le Worker mais AVANT d'avoir relié GitHub. Pas grave —
+le chemin fiable passe par les paramètres du Worker :
+
+1. Si l'assistant a planté : Workers et Pages → `portfolio` →
+   Paramètres → **Compilations** → « Référentiel Git : Se connecter » →
+   GitHub → limite l'accès au seul dépôt `portfolio` → branche de
+   production `main`.
+2. Configuration de build :
+   - Commande de build : `npm run build`
+   - Déployer la commande : `npx wrangler deploy`
+3. La connexion ne construit PAS l'existant : le build part au push
+   suivant sur `main` (une fusion de PR suffit).
+4. Premier déploiement : activer l'URL `*.workers.dev` (onglet
+   Domaines) puis vérifier — pages FR, /en/, une page légale, et les
+   en-têtes (F12 → Network → Headers : une seule
+   `Content-Security-Policy`).
+   Le `wrangler.jsonc` du dépôt décrit déjà les assets (`./dist`).
 
 ## 5. Le domaine `arthurlecomte.fr`
 
