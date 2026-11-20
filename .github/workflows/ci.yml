@@ -1,6 +1,8 @@
 # Continuous integration — runs on every pull request and every push to
 # main. Merging is only allowed when this workflow is green (branch
 # protection is configured at go-live, see docs/deploiement.md).
+# npm run build itself already runs: content verification, header
+# verification and the demo pipeline with its security scan (prebuild).
 name: CI
 
 on:
@@ -24,6 +26,9 @@ jobs:
 
       - name: Install exact locked dependencies
         run: npm ci
+        env:
+          # The a11y step uses the runner's Chrome, not puppeteer's copy.
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
 
       - name: Check formatting
         run: npm run format:check
@@ -31,8 +36,22 @@ jobs:
       - name: Type-check Astro and TypeScript files
         run: npm run check
 
-      - name: Build the site
+      - name: Build the site (content, headers and demo checks included)
         run: npm run build
 
-      - name: Audit dependencies
+      - name: Check internal links on the built site
+        run: node scripts/check-links.mjs
+
+      - name: Accessibility on main pages (WCAG 2 AA)
+        run: node scripts/test-a11y.mjs
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+
+      - name: Build every availability state and the empty launch state
+        run: node scripts/test-states.mjs
+
+      - name: Audit site dependencies
         run: npm audit --audit-level=high
+
+      - name: Audit demo dependencies
+        run: node scripts/audit-demos.mjs

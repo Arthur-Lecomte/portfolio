@@ -13,6 +13,9 @@ export function projectSlug(entry: Project | ProjectEn): string {
  * production and host preview builds never include them.
  */
 export async function getPublishedProjects(): Promise<Project[]> {
+  // TEST_NO_PROJECTS=1 simulates the launch state (zero published
+  // projects) for scripts/test-states.mjs — never set it elsewhere.
+  if (process.env.TEST_NO_PROJECTS === '1') return [];
   const all = await getCollection('projects', ({ data }) =>
     import.meta.env.PROD ? data.draft === false : true,
   );

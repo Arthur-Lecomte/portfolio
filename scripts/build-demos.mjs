@@ -45,9 +45,11 @@ function demoProjects() {
   for (const slug of readdirSync(projectsDir)) {
     const frPath = join(projectsDir, slug, 'fr.md');
     if (!existsSync(frPath)) continue;
-    const fr = readFileSync(frPath, 'utf8');
-    if (/^demo\s*:\s*['"]?internal/m.test(fr)) {
-      map.set(slug, { draft: !/^draft\s*:\s*false\b/m.test(fr) });
+    // Only look at the frontmatter, so body prose can never be
+    // mistaken for a draft/demo declaration.
+    const fm = readFileSync(frPath, 'utf8').match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1] ?? '';
+    if (/^demo\s*:\s*['"]?internal/m.test(fm)) {
+      map.set(slug, { draft: !/^draft\s*:\s*false\b/m.test(fm) });
     }
   }
   return map;
@@ -64,13 +66,19 @@ function walk(dir, out = []) {
   return out;
 }
 
-// Line comments: a "//" NOT preceded by ":" (otherwise https:// URLs
-// inside strings would be eaten and escape the scan).
-const stripJsComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(?<!:)\/\/[^\n]*/g, '');
+// Line comments: only a "//" at line start or after whitespace/common
+// punctuation counts. A "//" glued to other characters (https://, a
+// quote, an identifier) is NOT a comment — otherwise `const s = "//";`
+// would blind the scan for the rest of the line.
+const stripJsComments = (s) =>
+  s.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[\s;{}(,=&|])\/\/[^\n]*/gm, '$1');
 const stripCssComments = (s) => s.replace(/\/\*[\s\S]*?\*\//g, '');
 
-/** Absolute URL that is neither same-origin-relative nor a W3C namespace. */
-const EXTERNAL_URL = /https?:\/\/(?!www\.w3\.org\/)[^\s"'()<>]+/i;
+/** Absolute URL (http, https, ws, wss) that is not a W3C namespace. */
+const EXTERNAL_URL = /(?:https?|wss?):\/\/(?!www\.w3\.org\/)[^\s"'()<>]+/i;
+
+/** Protocol-relative resource reference in HTML attributes. */
+const PROTOCOL_RELATIVE_ATTR = /(?:src|href|srcset|action|data)\s*=\s*["']\s*\/\//i;
 
 const KEY_PATTERNS = [
   /(?:api[_-]?key|secret|token|password)\s*[:=]\s*["'][A-Za-z0-9_\-]{16,}["']/i,
@@ -95,33 +103,39 @@ function scanFile(path, slug) {
   const raw = readFileSync(path, 'utf8');
   const rel = relative(root, path);
 
-  let text = raw;
-  if (ext === '.js' || ext === '.mjs') text = stripJsComments(raw);
-  if (ext === '.css') text = stripCssComments(raw);
+  // URL detection runs on comment-stripped text (embedded libraries cite
+  // their homepage in header comments); every other check runs on the
+  // RAW text so nothing can hide behind a fake comment.
+  let urlText = raw;
+  if (ext === '.js' || ext === '.mjs') urlText = stripJsComments(raw);
+  if (ext === '.css') urlText = stripCssComments(raw);
   if (ext === '.html' || ext === '.htm' || ext === '.svg') {
     // Drop HTML comments and xmlns declarations (namespaces, not requests).
-    text = raw.replace(/<!--[\s\S]*?-->/g, '').replace(/xmlns(?::[a-z]+)?="[^"]*"/g, '');
+    urlText = raw.replace(/<!--[\s\S]*?-->/g, '').replace(/xmlns(?::[a-z]+)?="[^"]*"/g, '');
+    if (PROTOCOL_RELATIVE_ATTR.test(urlText)) {
+      errors.push(`${rel}: protocol-relative URL (//host/...) — demos must embed everything`);
+    }
   }
 
-  const urlMatch = text.match(EXTERNAL_URL);
+  const urlMatch = urlText.match(EXTERNAL_URL);
   if (urlMatch) {
     errors.push(
       `${rel}: URL toward another domain ("${urlMatch[0].slice(0, 60)}") — demos must embed everything`,
     );
   }
-  if (/document\.cookie/.test(text)) {
-    errors.push(`${rel}: document.cookie is forbidden in demos`);
+  if (/document\s*\.\s*cookie|document\s*\[\s*["']cookie|cookieStore/.test(raw)) {
+    errors.push(`${rel}: cookie access is forbidden in demos`);
   }
-  if (/serviceWorker/.test(text)) {
+  if (/serviceWorker/i.test(raw)) {
     errors.push(`${rel}: service workers are forbidden in demos`);
   }
   for (const re of KEY_PATTERNS) {
-    if (re.test(text)) {
+    if (re.test(raw)) {
       errors.push(`${rel}: string that looks like an API key or token`);
       break;
     }
   }
-  if (/localStorage/.test(text) && !text.includes(`${slug}:`)) {
+  if (/localStorage/.test(raw) && !raw.includes(`${slug}:`)) {
     warnings.push(`${rel}: localStorage used without an obvious "${slug}:" key prefix — check it`);
   }
   return { errors, warnings };
@@ -153,9 +167,15 @@ for (const slug of readdirSync(demosDir)) {
   if (existsSync(pkgPath)) {
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
     if (pkg.scripts?.build) {
+      if (!existsSync(join(dir, 'package-lock.json'))) {
+        console.error(
+          `✗ demo "${slug}": package.json without package-lock.json — lockfiles are mandatory (repo rule). Run npm install in demos/${slug}/ and commit the lockfile.`,
+        );
+        allErrors.push(`${slug}: missing package-lock.json`);
+        continue;
+      }
       try {
-        const installCmd = existsSync(join(dir, 'package-lock.json')) ? 'npm ci' : 'npm install';
-        execSync(`${installCmd} --no-audit --no-fund`, { cwd: dir, stdio: 'pipe' });
+        execSync('npm ci --no-audit --no-fund', { cwd: dir, stdio: 'pipe' });
         execSync('npm run build', { cwd: dir, stdio: 'pipe' });
         srcDir = join(dir, 'dist');
       } catch (e) {

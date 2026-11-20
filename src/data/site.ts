@@ -7,6 +7,12 @@
 /** 'open' shows the availability line everywhere; 'closed' and 'hidden' remove it. */
 export type Availability = 'open' | 'closed' | 'hidden';
 
+const availabilities: readonly Availability[] = ['open', 'closed', 'hidden'];
+const envAvailability = process.env.SITE_AVAILABILITY;
+if (envAvailability && !availabilities.includes(envAvailability as Availability)) {
+  throw new Error(`SITE_AVAILABILITY must be one of ${availabilities.join('|')}`);
+}
+
 export const site = {
   /** Site title and owner name. */
   name: 'Arthur Lecomte',
@@ -23,7 +29,12 @@ export const site = {
     en: 'Var, near Toulon (South of France)',
   },
 
-  availability: 'open' as Availability,
+  /**
+   * The SITE_AVAILABILITY env var overrides this at build time — used
+   * only by scripts/test-states.mjs to build every state in CI
+   * (validated above; an invalid value aborts the build).
+   */
+  availability: (envAvailability ?? 'open') as Availability,
 
   /** Shown on the home page and in meta descriptions when availability is 'open'. */
   availabilityText: {
