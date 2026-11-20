@@ -14,15 +14,22 @@ interface Props {
   locale: Locale;
   title: string;
   description: string;
+  /**
+   * Path of this page in the other language. Defaults to the same route
+   * under the other prefix; null = no equivalent (hides the language
+   * switcher and the hreflang pair — e.g. the shared 404 page).
+   */
+  altPath?: string | null;
 }
 
-const { locale, title, description } = Astro.props;
+const { locale, title, description, altPath } = Astro.props;
 const strings = t(locale);
 const other = altLocale(locale);
 
 const path = Astro.url.pathname;
-const frUrl = new URL(switchPath(path, 'fr'), Astro.site);
-const enUrl = new URL(switchPath(path, 'en'), Astro.site);
+const otherPath = altPath === undefined ? switchPath(path, other) : altPath;
+const frUrl = new URL(locale === 'fr' ? path : (otherPath ?? path), Astro.site);
+const enUrl = new URL(locale === 'en' ? path : (otherPath ?? path), Astro.site);
 const canonical = new URL(path, Astro.site);
 
 const cvHref = locale === 'en' ? (site.cv.en ?? site.cv.fr) : site.cv.fr;
@@ -42,9 +49,13 @@ const year = new Date().getFullYear();
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="fr" href={frUrl} />
-    <link rel="alternate" hreflang="en" href={enUrl} />
-    <link rel="alternate" hreflang="x-default" href={frUrl} />
+    {otherPath !== null && (
+      <>
+        <link rel="alternate" hreflang="fr" href={frUrl} />
+        <link rel="alternate" hreflang="en" href={enUrl} />
+        <link rel="alternate" hreflang="x-default" href={frUrl} />
+      </>
+    )}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
@@ -85,12 +96,14 @@ const year = new Date().getFullYear();
                 </a>
               </li>
             )}
-            <li>
-              <a class="lang-switch" href={switchPath(path, other)} lang={other} hreflang={other}>
-                <span aria-hidden="true">{other.toUpperCase()}</span>
-                <span class="sr-only">{strings.langSwitch}</span>
-              </a>
-            </li>
+            {otherPath !== null && (
+              <li>
+                <a class="lang-switch" href={otherPath} lang={other} hreflang={other}>
+                  <span aria-hidden="true">{other.toUpperCase()}</span>
+                  <span class="sr-only">{strings.langSwitch}</span>
+                </a>
+              </li>
+            )}
           </ul>
         </nav>
       </div>
