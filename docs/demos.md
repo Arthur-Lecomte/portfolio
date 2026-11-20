@@ -14,7 +14,9 @@ strictes : une démo boguée ne doit rien pouvoir charger ni envoyer ailleurs.
 ## Le pipeline (`scripts/build-demos.mjs`)
 
 Lancé automatiquement avant chaque build (`npm run build`) et avant le serveur
-de dev (`npm run dev`). Il :
+de dev (`npm run dev`). Attention : un `npm run build` lancé pendant que le
+serveur de dev tourne vide `public/demos/` des brouillons (c'est son rôle en
+production) — relancer `npm run dev` pour les retrouver. Le pipeline :
 
 1. vide puis remplit `public/demos/` (dossier généré, jamais commité) ;
 2. exclut en production et en preview les démos des projets en `draft`
