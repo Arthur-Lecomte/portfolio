@@ -1,0 +1,117 @@
+---
+/**
+ * Home page content, shared by / and /en/. The hero answers the
+ * 30-second test (who, what, where, CV, email) above the fold; projects
+ * follow. With zero published project the page stays complete: no empty
+ * section, no "coming soon".
+ */
+import { site } from '../data/site';
+import { t, localizePath, type Locale } from '../i18n/ui';
+import { getPublishedProjects, getEnglishText } from '../lib/projects';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const strings = t(locale);
+
+const intro = {
+  fr: 'Formé en C# et Java, je conçois des applications métier — un an d’alternance et deux stages au compteur. Ici, je montre mes projets personnels, développés avec une IA que je cadre et dont je vérifie le travail.',
+  en: 'Trained in C# and Java, I build business applications — one year of work-study and two internships so far. This site shows my personal projects, developed with an AI that I direct and whose work I check.',
+}[locale];
+
+const projects = await getPublishedProjects();
+const featured = projects.filter((p) => p.data.featured);
+const shown = (featured.length > 0 ? featured : projects).slice(0, 4);
+const english = new Map(
+  locale === 'en'
+    ? await Promise.all(
+        shown.map(async (p) => [p.id, await getEnglishText(p.id.split('/')[0]!)] as const),
+      )
+    : [],
+);
+
+const cvHref = locale === 'en' ? (site.cv.en ?? site.cv.fr) : site.cv.fr;
+const cvNote = locale === 'en' && !site.cv.en && site.cv.fr ? ` ${strings.cvFrenchOnly}` : '';
+---
+
+<section class="hero">
+  <h1>{site.name}</h1>
+  <p class="hero-role">
+    {site.role[locale]} — {site.location[locale]}
+  </p>
+  <p class="hero-intro">{intro}</p>
+  {site.availability === 'open' && <p class="hero-avail">{site.availabilityText[locale]}</p>}
+  <div class="hero-actions">
+    {cvHref && (
+      <a class="btn btn-primary" href={cvHref}>
+        {strings.downloadCv}
+        {cvNote}
+      </a>
+    )}
+    <a class="btn btn-secondary" href={`mailto:${site.email}`}>
+      {strings.writeMe}
+    </a>
+  </div>
+</section>
+
+{projects.length > 0 && (
+  <section class="home-projects" aria-labelledby="projects-title">
+    <h2 id="projects-title">{strings.projectsTitle}</h2>
+    <div class="card-grid">
+      {shown.map((p) => (
+        <ProjectCard locale={locale} project={p} english={english.get(p.id)} />
+      ))}
+    </div>
+    <p>
+      <a href={localizePath(locale, '/projets/')}>{strings.allProjects} →</a>
+    </p>
+  </section>
+)}
+
+<style>
+  .hero {
+    padding-bottom: var(--space-xl);
+  }
+
+  .hero h1 {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .hero-role {
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-md);
+  }
+
+  .hero-intro {
+    max-width: 55ch;
+  }
+
+  .hero-avail {
+    color: var(--color-accent);
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    margin-top: var(--space-md);
+  }
+
+  .home-projects {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-lg);
+  }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+</style>

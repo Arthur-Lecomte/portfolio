@@ -4,7 +4,6 @@
  * Dev-only: getStaticPaths returns no path in production builds, so
  * this page exists neither on the live site nor in host previews.
  */
-import { Font } from 'astro:assets';
 import { site } from '../../data/site';
 import '../../styles/global.css';
 import '../../styles/styleguide.css';
@@ -21,7 +20,6 @@ export function getStaticPaths() {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <Font cssVariable="--font-inter" preload />
     <title>Styleguide — {site.name}</title>
   </head>
   <body>

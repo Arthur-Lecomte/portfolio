@@ -1,0 +1,210 @@
+---
+/**
+ * Full project page: cover, metadata, demo/source/download actions,
+ * AI-assistance note, body, third-party credits, previous/next nav.
+ */
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import { formatDate, t, localizePath, type Locale } from '../i18n/ui';
+import { demoUrl, projectSlug, type Project, type ProjectEn } from '../lib/projects';
+import { site } from '../data/site';
+
+interface Props {
+  locale: Locale;
+  project: Project;
+  english?: ProjectEn;
+  prev: Project | null;
+  next: Project | null;
+  /** Titles of prev/next in the right language. */
+  prevTitle?: string;
+  nextTitle?: string;
+}
+
+const { locale, project, english, prev, next, prevTitle, nextTitle } = Astro.props;
+const strings = t(locale);
+const data = project.data;
+const text = locale === 'en' && english ? english.data : data;
+const slug = projectSlug(project);
+const demo = demoUrl(project);
+const isExternal = (url: string) => url.startsWith('https://');
+
+const statusLabel = {
+  wip: strings.statusWip,
+  done: strings.statusDone,
+  archived: strings.statusArchived,
+}[data.status];
+
+/* The body is rendered from the entry matching the locale. */
+const { Content } = await render(locale === 'en' && english ? english : project);
+
+/* An internal demo's source link defaults to its folder in this repo. */
+const repoHref =
+  data.links.repo ??
+  (data.demo === 'internal' ? `${site.links.repo}/tree/main/demos/${slug}` : undefined);
+---
+
+<article class="project">
+  <p>
+    <a href={localizePath(locale, '/projets/')}>{strings.backToProjects}</a>
+  </p>
+
+  <header>
+    <h1>{text.title}</h1>
+    <p class="summary">{text.summary}</p>
+    <p class="meta">
+      {formatDate(locale, data.date)} · {statusLabel} · {data.stack.join(' · ')}
+      {data.draft && <mark class="draft-badge">{strings.draftBadge}</mark>}
+    </p>
+  </header>
+
+  <Image
+    src={data.cover}
+    alt={text.coverAlt}
+    widths={[640, 1280]}
+    sizes="(max-width: 48rem) 100vw, 44rem"
+    class="cover"
+  />
+
+  <div class="actions">
+    {demo && (
+      <a
+        class="btn btn-primary"
+        href={demo}
+        rel={isExternal(demo) ? 'noopener noreferrer' : undefined}
+      >
+        {strings.openDemo}
+      </a>
+    )}
+    {repoHref && (
+      <a class="btn btn-secondary" href={repoHref} rel="noopener noreferrer">
+        {strings.sourceCode}
+      </a>
+    )}
+    {data.links.download && (
+      <a class="btn btn-secondary" href={data.links.download} rel="noopener noreferrer">
+        {strings.download}
+      </a>
+    )}
+  </div>
+
+  {text.disclaimer && (
+    <p class="disclaimer">
+      <em>{text.disclaimer}</em>
+    </p>
+  )}
+
+  {text.aiNote && (
+    <p class="ai-note">
+      {strings.aiMention} {text.aiNote}
+    </p>
+  )}
+
+  <div class="body">
+    <Content />
+  </div>
+
+  {data.thirdParty.length > 0 && (
+    <section class="third-party">
+      <h2>{strings.thirdPartyTitle}</h2>
+      <ul>
+        {data.thirdParty.map((item) => (
+          <li>
+            <a href={item.url} rel="noopener noreferrer">
+              {item.name}
+            </a>{' '}
+            — {item.license}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
+  {(prev || next) && (
+    <nav class="project-nav" aria-label={`${strings.prevProject} / ${strings.nextProject}`}>
+      {prev ? (
+        <a href={localizePath(locale, `/projets/${projectSlug(prev)}/`)}>
+          ← {prevTitle ?? prev.data.title}
+        </a>
+      ) : (
+        <span />
+      )}
+      {next ? (
+        <a href={localizePath(locale, `/projets/${projectSlug(next)}/`)}>
+          {nextTitle ?? next.data.title} →
+        </a>
+      ) : (
+        <span />
+      )}
+    </nav>
+  )}
+</article>
+
+<style>
+  .summary {
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+    margin-bottom: var(--space-xs);
+  }
+
+  .cover {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    margin: var(--space-md) 0;
+  }
+
+  .actions {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-lg);
+  }
+
+  .disclaimer {
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+  }
+
+  .ai-note {
+    border-left: 3px solid var(--color-border);
+    padding-left: var(--space-sm);
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+  }
+
+  .body {
+    margin-top: var(--space-lg);
+  }
+
+  .third-party {
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-lg);
+    padding-top: var(--space-md);
+  }
+
+  .third-party h2 {
+    font-size: var(--text-base);
+  }
+
+  .third-party ul {
+    font-size: var(--text-sm);
+  }
+
+  .project-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-md);
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-md);
+    font-size: var(--text-sm);
+  }
+
+  .draft-badge {
+    display: inline-block;
+    background: var(--color-accent);
+    color: var(--color-accent-contrast);
+    border-radius: 3px;
+    padding: 0 0.3rem;
+    margin-left: 0.3rem;
+  }
+</style>

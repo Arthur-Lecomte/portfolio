@@ -10,12 +10,13 @@ Retenu : Inter seule (400/600/700), palette neutre, accent bleu encre #1f4fd8
 (clair) / #8ab0ff (sombre), tokens figés dans `src/styles/tokens.css`.
 Les polices candidates non retenues ont été supprimées du dépôt.
 
-## 2026-11-20 — Polices auto-hébergées via l'API Fonts d'Astro
+## 2026-11-20 — Polices : @font-face manuel plutôt que l'API Fonts d'Astro
 
-Il fallait servir Inter sans CDN (règle « aucun contenu tiers »).
-Retenu : woff2 Fontsource committés avec leur licence OFL, déclarés via
-`fonts` + `fontProviders.local()` dans astro.config.ts.
-L'API gère hachage, cache immuable, préchargement et polices de repli ajustées.
+L'API Fonts (composant `<Font>`) injecte un `<style>` inline dans chaque page,
+incompatible avec la CSP stricte `style-src 'self'` sans hash. Retenu : woff2
+Fontsource committés (licence OFL incluse), `@font-face` écrits dans tokens.css
+avec les métriques de repli calculées par l'API (copiées une fois), préchargement
+manuel dans le layout. Zéro inline, URLs hachées par Vite, même résultat.
 
 ## 2026-11-20 — Pas de statistiques au lancement
 

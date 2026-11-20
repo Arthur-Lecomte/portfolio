@@ -1,0 +1,41 @@
+---
+/** Projects list, newest first, with a clean empty state. */
+import { t, type Locale } from '../i18n/ui';
+import { getPublishedProjects, getEnglishText, projectSlug } from '../lib/projects';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const strings = t(locale);
+const projects = await getPublishedProjects();
+const english = new Map(
+  locale === 'en'
+    ? await Promise.all(
+        projects.map(async (p) => [p.id, await getEnglishText(projectSlug(p))] as const),
+      )
+    : [],
+);
+---
+
+<h1>{strings.projectsTitle}</h1>
+
+{projects.length === 0 ? (
+  <p class="empty-state">{strings.projectsEmpty}</p>
+) : (
+  <div class="card-grid">
+    {projects.map((p) => (
+      <ProjectCard locale={locale} project={p} english={english.get(p.id)} />
+    ))}
+  </div>
+)}
+
+<style>
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    gap: var(--space-md);
+  }
+</style>
