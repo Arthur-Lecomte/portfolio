@@ -8,7 +8,9 @@ public/demos/
 # Private files — never committed (see CLAUDE.md)
 _prive/
 CLAUDE.md
-.claude/
+# .claude/ is published (Arthur's call, 2026-11-20) except per-machine
+# settings that Claude Code may write locally
+.claude/settings.local.json
 
 # Environment files — this project uses no secrets, kept as a safety net
 .env
