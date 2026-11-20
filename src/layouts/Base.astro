@@ -132,9 +132,16 @@ const year = new Date().getFullYear();
             </li>
           )}
         </ul>
-        <!-- Legal links are added with the legal pages themselves (phase 6). -->
+        <ul class="footer-links">
+          <li>
+            <a href={localizePath(locale, '/mentions-legales/')}>{strings.footerLegal}</a>
+          </li>
+          <li>
+            <a href={localizePath(locale, '/confidentialite/')}>{strings.footerPrivacy}</a>
+          </li>
+        </ul>
         <p class="colophon">
-          © {year} {site.name} — {strings.footerColophon}
+          © {year} {site.name} — {strings.footerColophon}{' '}
           <a href={site.links.repo} rel="noopener noreferrer">
             {strings.footerSource}
           </a>

@@ -1,0 +1,67 @@
+---
+import Base from '../layouts/Base.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  locale="fr"
+  title={`Confidentialité — ${site.name}`}
+  description="Ce site ne dépose aucun cookie et ne collecte aucune donnée de navigation."
+>
+  <h1>Confidentialité</h1>
+
+  <p>
+    La version courte : ce site est entièrement statique. Il ne dépose <strong>aucun cookie</strong>
+    et n'embarque <strong>aucun traceur ni outil de mesure d'audience</strong> ; il ne contient ni
+    compte, ni formulaire, ni contenu de sites tiers. C'est aussi pour cela qu'il n'y a pas de
+    bandeau de consentement : il n'y a rien à consentir.
+  </p>
+
+  <h2>Journaux techniques de l'hébergeur</h2>
+  <p>
+    Le site est servi par Cloudflare, Inc. (États-Unis). Lors de votre visite, Cloudflare traite des
+    données techniques (adresse IP, user-agent, métadonnées de requête, journaux de sécurité) afin
+    d'acheminer les pages, d'assurer la sécurité du service (anti-DDoS, pare-feu) et ses
+    performances. Base légale : l'intérêt légitime de l'éditeur à fournir un site sûr (article 6,
+    paragraphe 1, point f du RGPD). Cloudflare agit en qualité de sous-traitant et conserve ces
+    journaux pour une durée limitée, conformément à sa politique de confidentialité ; l'éditeur
+    n'accède pas aux journaux bruts.
+  </p>
+  <p>
+    Transferts hors Union européenne : Cloudflare, Inc. déclare adhérer au cadre de protection des
+    données UE–États-Unis (<em>EU-U.S. Data Privacy Framework</em>, décision d'adéquation (UE)
+    2023/1795 du 10 juillet 2023) et applique en complément les clauses contractuelles types de la
+    Commission européenne.
+  </p>
+
+  <h2>Stockage local des démos</h2>
+  <p>
+    Certaines démos de projets enregistrent une sauvegarde ou des préférences dans le stockage local
+    de votre navigateur — le <code>localStorage</code>. Ces données restent sur votre appareil :
+    rien n'est transmis, ni à ce site, ni à des tiers. Ce stockage, strictement nécessaire au
+    fonctionnement demandé (reprendre une partie, garder un réglage), est exempté de consentement au
+    titre de l'article 82 de la loi Informatique et Libertés. Pour l'effacer : le bouton de remise à
+    zéro de la démo concernée, ou les réglages de votre navigateur (« effacer les données de site
+    »).
+  </p>
+
+  <h2>E-mails</h2>
+  <p>
+    Si vous m'écrivez à <a href={`mailto:${site.email}`}>{site.email}</a>, je reçois votre adresse
+    et votre message. Je m'en sers uniquement pour vous répondre, je ne les transmets à personne et
+    je ne les conserve que le temps utile à notre échange.
+  </p>
+
+  <h2>Vos droits</h2>
+  <p>
+    Vous disposez des droits d'accès, de rectification, d'effacement, d'opposition et de limitation
+    prévus par le RGPD. Pour les exercer : <a href={`mailto:${site.email}`}>{site.email}</a>. Vous
+    pouvez aussi adresser une réclamation à la CNIL, sur{' '}
+    <a href="https://www.cnil.fr" rel="noopener noreferrer">
+      cnil.fr
+    </a>
+    .
+  </p>
+
+  <p class="meta">Dernière mise à jour : 20 novembre 2026.</p>
+</Base>
