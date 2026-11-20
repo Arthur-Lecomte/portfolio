@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "node scripts/verify-content.mjs",
     "build": "astro build",
+    "new:project": "node scripts/new-project.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "format": "prettier --write .",

@@ -38,15 +38,18 @@ export const site = {
     linkedin: 'https://www.linkedin.com/in/arthur-lecomte-7baa8522b/',
     /** Set to null to remove every GitHub profile link from the site. */
     github: 'https://github.com/Arthur-Lecomte' as string | null,
+    /** Public repository of this site — shown in the footer. */
+    repo: 'https://github.com/Arthur-Lecomte/portfolio',
   },
 
   /**
-   * CV files, served from public/. The French file is required before
-   * going live (phase 3). If `en` is null, the English pages link to
-   * the French CV and say so.
+   * CV files, served from public/. null = the link is hidden everywhere
+   * (no dead link). Required before go-live: a "web" CV without phone,
+   * postal address or photo. If `en` stays null, the English pages link
+   * to the French CV and say so.
    */
   cv: {
-    fr: '/cv-arthur-lecomte.pdf',
+    fr: null as string | null,
     en: null as string | null,
   },
 
