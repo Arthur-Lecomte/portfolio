@@ -32,7 +32,16 @@ if (!process.env.PUPPETEER_EXECUTABLE_PATH) {
   }
 }
 
-const preview = spawn('npm', ['run', 'preview'], { cwd: root, shell: true, stdio: 'pipe' });
+// On POSIX, detached + negative-PID kill reliably stops the whole
+// process group. On Windows, taskkill /T can miss the node child behind
+// the cmd/npm wrappers, so cleanup also kills whatever still listens on
+// the port (that exact leak served a stale production build on :4321).
+const preview = spawn('npm', ['run', 'preview'], {
+  cwd: root,
+  shell: true,
+  stdio: 'pipe',
+  detached: process.platform !== 'win32',
+});
 
 async function waitForServer(url, tries = 50) {
   for (let i = 0; i < tries; i += 1) {
@@ -70,8 +79,29 @@ try {
 } catch (e) {
   console.error(String(e));
 } finally {
-  // `shell: true` wraps npm: kill the whole tree on Windows.
-  spawn('taskkill', ['/pid', String(preview.pid), '/T', '/F'], { shell: true });
+  if (process.platform === 'win32') {
+    const { execSync } = await import('node:child_process');
+    try {
+      execSync(`taskkill /pid ${preview.pid} /T /F`, { stdio: 'ignore' });
+    } catch {
+      /* already gone */
+    }
+    // Belt and braces: kill whatever still holds the preview port.
+    try {
+      execSync(
+        'powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort 4321 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }"',
+        { stdio: 'ignore' },
+      );
+    } catch {
+      /* nothing was listening */
+    }
+  } else {
+    try {
+      process.kill(-preview.pid, 'SIGTERM');
+    } catch {
+      /* already gone */
+    }
+  }
 }
 
 process.exit(exitCode);
