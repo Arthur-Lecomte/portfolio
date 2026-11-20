@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+_prive/
+package-lock.json
+*.woff2
+*.pdf
