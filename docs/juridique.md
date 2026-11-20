@@ -52,11 +52,18 @@ après la mise en ligne.
 1. **Avant la mise en ligne** : relire l'article 1-1 LCEN sur Légifrance
    (lien ci-dessus) pour vérifier qu'il n'a pas été modifié depuis nov. 2026.
 2. **Avant la mise en ligne, puis à chaque déménagement ou changement de
-   numéro** : vérifier que ton compte Cloudflare (et le compte OVH du
-   domaine) contient ton identité complète et exacte — nom, prénoms,
-   adresse, téléphone. C'est la condition expresse du régime d'anonymat
-   partiel du II, et elle est **continue** : des coordonnées périmées le
-   feraient tomber.
+   numéro** : avoir communiqué à l'hébergeur ton identité complète et
+   exacte — nom, prénoms, adresse, téléphone. C'est la condition expresse
+   du régime d'anonymat partiel du II, et elle est **continue** : des
+   coordonnées périmées la feraient tomber.
+   Constaté le 20/11/2026 : le tableau de bord Cloudflare n'offre aucun
+   champ d'adresse hors ajout d'un moyen de paiement. En pratique :
+   (a) renseigner le « Nom d'affichage » du profil ; (b) transmettre
+   l'identité complète par écrit via le portail de support Cloudflare en
+   référence du compte, et **conserver le ticket** comme preuve de la
+   communication ; ou (c) ajouter un moyen de paiement (le formulaire
+   contient adresse et téléphone) même sans abonnement payant. Côté OVH,
+   l'identité du titulaire du domaine est déjà vérifiée (AFNIC).
 3. **Avant la mise en ligne** : confirmer les coordonnées de Cloudflare, Inc.
    (adresse, téléphone) sur cloudflare.com, et le statut « Active » de sa
    certification sur dataprivacyframework.gov (recherche « Cloudflare »).
