@@ -60,7 +60,7 @@ export const site = {
    * to the French CV and say so.
    */
   cv: {
-    fr: null as string | null,
+    fr: '/cv-arthur-lecomte.pdf' as string | null,
     en: null as string | null,
   },
 
