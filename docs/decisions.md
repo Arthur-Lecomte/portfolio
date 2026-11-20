@@ -3,6 +3,14 @@
 Trois lignes par décision : le problème, l'option retenue, pourquoi.
 Les plus récentes en haut.
 
+## 2026-11-20 — `.claude/` devient public (revirement assumé)
+
+Le cadrage initial gardait `.claude/` hors du dépôt ; Arthur a changé d'avis.
+Retenu : publier `.claude/` (recherches de phase 0, skill /nouveau-projet) —
+cela illustre le but n° 2 du site, montrer comment il cadre et dirige une IA.
+Restent privés : `CLAUDE.md`, `_prive/` et `.claude/settings.local.json`.
+Vérifié avant publication : aucune donnée personnelle dans ces fichiers.
+
 ## 2026-11-20 — Durcissements issus de la relecture sécurité indépendante
 
 La relecture a trouvé : un test a11y qui pouvait « réussir » sur des 404, un
