@@ -20,9 +20,12 @@ après la mise en ligne.
   résiduel accepté en connaissance de cause.
 - **Pas de bandeau cookies** : le site ne dépose aucun cookie ni traceur
   soumis à consentement. Le `localStorage` des démos (sauvegardes et
-  préférences, jamais transmis) est exempté au titre de l'article 82, al. 2
-  de la loi 78-17 (stockage strictement nécessaire au service expressément
-  demandé — délibération CNIL n° 2020-091, art. 1 et 5).
+  préférences, jamais transmis) est exempté au titre de l'article 82,
+  alinéa final, 2° de la loi 78-17 (stockage strictement nécessaire au
+  service expressément demandé — délibération CNIL n° 2020-091, art. 1 et 5).
+- **Coordonnées Cloudflare** : le téléphone affiché (+1 650 319 8930) est
+  celui de la privacy policy officielle, vérifié en ligne le 20/11/2026
+  (le +1 888 993 5273 parfois cité est la ligne commerciale).
 - **Pas de mesure d'audience** : choix d'Arthur (2026-11-20). Si Plausible
   (ou autre) est activé un jour : refaire l'évaluation avec les critères CNIL
   en vigueur et l'outil d'auto-évaluation (cnil.fr), consigner le résultat
@@ -48,10 +51,12 @@ après la mise en ligne.
 
 1. **Avant la mise en ligne** : relire l'article 1-1 LCEN sur Légifrance
    (lien ci-dessus) pour vérifier qu'il n'a pas été modifié depuis nov. 2026.
-2. **Avant la mise en ligne** : vérifier que ton compte Cloudflare (et le
-   compte OVH du domaine) contient ton identité complète et exacte — nom,
-   prénoms, adresse, téléphone. C'est la condition expresse du régime
-   d'anonymat partiel du II ; des coordonnées périmées le feraient tomber.
+2. **Avant la mise en ligne, puis à chaque déménagement ou changement de
+   numéro** : vérifier que ton compte Cloudflare (et le compte OVH du
+   domaine) contient ton identité complète et exacte — nom, prénoms,
+   adresse, téléphone. C'est la condition expresse du régime d'anonymat
+   partiel du II, et elle est **continue** : des coordonnées périmées le
+   feraient tomber.
 3. **Avant la mise en ligne** : confirmer les coordonnées de Cloudflare, Inc.
    (adresse, téléphone) sur cloudflare.com, et le statut « Active » de sa
    certification sur dataprivacyframework.gov (recherche « Cloudflare »).
@@ -64,3 +69,12 @@ après la mise en ligne.
 6. **Si activation de statistiques un jour** : voir « Pas de mesure
    d'audience » ci-dessus — évaluation CNIL d'abord, page Confidentialité
    ensuite, activation en dernier.
+7. **Après le déploiement, et après tout changement de réglage Cloudflare** :
+   vérifier dans les DevTools (onglet Application) qu'aucun cookie n'est
+   réellement posé. Attention : activer Bot Fight Mode ou un « challenge »
+   Cloudflare poserait des cookies (`__cf_bm`, `cf_clearance`) et rendrait
+   fausse la page Confidentialité — ne pas activer ces options sans la
+   mettre à jour.
+8. **Si une démo future transmet quoi que ce soit** (scores en ligne,
+   télémétrie…) : refaire l'analyse de l'article 82 pour cette démo avant
+   publication — l'exemption actuelle repose sur « jamais transmis ».
