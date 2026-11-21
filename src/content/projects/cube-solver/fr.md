@@ -49,8 +49,9 @@ scratch : modèle en cubies, coordonnées de phase, tables de pruning et
 recherche IDA*. Le calcul tourne dans un Web Worker pour ne jamais figer
 l'animation — les solutions font environ 20 coups et tombent en quelques
 dizaines de millisecondes. Le rendu 3D est fait avec three.js (embarqué
-au build, aucune requête externe) ; un harnais Node (`npm run verify`)
-rejoue 200 mélanges aléatoires et contrôle chaque solution.
+au build, aucune requête externe) ; dans le repo du projet, un harnais
+Node (`npm run verify`) rejoue 200 mélanges aléatoires et contrôle
+chaque solution.
 
 ## Ce que j'ai appris ou décidé
 

@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "verify": "node scripts/verify-solver.mjs"
+    "preview": "vite preview"
   },
   "devDependencies": {
     "vite": "^8.0.0"

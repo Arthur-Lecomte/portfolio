@@ -129,6 +129,40 @@ assertZone('/demos/cube-solver/assets/worker-x.js', {
   'cube-solver CSP has no external host': (csp) => !/https?:\/\//.test(csp),
 });
 
+// The per-demo zone must differ from the generic demo zone by
+// worker-src ONLY — assert it directive by directive so a future edit
+// cannot widen anything else unnoticed.
+{
+  const dirs = (csp) =>
+    new Map(
+      csp
+        .split(';')
+        .map((d) => d.trim())
+        .filter(Boolean)
+        .map((d) => {
+          const [name, ...rest] = d.split(/\s+/);
+          return [name, rest.join(' ')];
+        }),
+    );
+  const generic = dirs(
+    headersFor('/demos/projet-exemple/main.js').get('content-security-policy') ?? '',
+  );
+  const cube = dirs(
+    headersFor('/demos/cube-solver/assets/worker-x.js').get('content-security-policy') ?? '',
+  );
+  for (const name of new Set([...generic.keys(), ...cube.keys()])) {
+    if (name === 'worker-src') continue;
+    if (generic.get(name) !== cube.get(name)) {
+      errors.push(
+        `cube-solver CSP diverges from the demo CSP on "${name}" — worker-src must be the only difference`,
+      );
+    }
+  }
+  if (cube.get('worker-src') !== "'self'") {
+    errors.push(`cube-solver worker-src must be exactly 'self', found "${cube.get('worker-src')}"`);
+  }
+}
+
 const astroAssets = headersFor('/_astro/app.css');
 if (!/immutable/.test(astroAssets.get('cache-control') ?? '')) {
   errors.push('/_astro/*: hashed assets must be cached immutable');
