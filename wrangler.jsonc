@@ -8,4 +8,6 @@
     // Serve our custom 404 page for unknown URLs.
     "not_found_handling": "404-page",
   },
+  // Required by `npx wrangler preview` (per-PR preview deployments).
+  "previews": {},
 }
