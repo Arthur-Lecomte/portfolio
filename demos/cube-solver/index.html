@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rubik's Cube 3D</title>
+  </head>
+  <body>
+    <header class="entete">
+      <h1>Rubik's Cube 3D</h1>
+      <p id="statut" class="statut" aria-live="polite">Chargement…</p>
+    </header>
+
+    <main class="contenu">
+      <!-- La scène three.js est montée ici. role="img" : un aria-label est
+           ignoré sur une div générique (naming prohibited). -->
+      <div
+        id="scene"
+        class="scene"
+        role="img"
+        aria-label="Cube de Rubik en 3D. Manipulation à la souris ou au
+          toucher ; utilisez les boutons de coups pour jouer au clavier."
+      ></div>
+
+      <section class="panneau" aria-label="Panneau de contrôle">
+        <div class="actions">
+          <button id="btn-melanger" type="button">Mélanger</button>
+          <button id="btn-resoudre" type="button" disabled>Résoudre</button>
+          <button id="btn-reinitialiser" type="button">Réinitialiser</button>
+        </div>
+
+        <div class="vitesse">
+          <label for="curseur-vitesse">Vitesse</label>
+          <span class="borne" aria-hidden="true">Lent</span>
+          <input
+            id="curseur-vitesse"
+            type="range"
+            min="80"
+            max="600"
+            step="10"
+            aria-label="Vitesse d'animation"
+          />
+          <span class="borne" aria-hidden="true">Rapide</span>
+        </div>
+
+        <div class="grille-coups" role="group" aria-label="Coups manuels">
+          <button type="button" data-move="U">U</button>
+          <button type="button" data-move="U'">U'</button>
+          <button type="button" data-move="D">D</button>
+          <button type="button" data-move="D'">D'</button>
+          <button type="button" data-move="L">L</button>
+          <button type="button" data-move="L'">L'</button>
+          <button type="button" data-move="R">R</button>
+          <button type="button" data-move="R'">R'</button>
+          <button type="button" data-move="F">F</button>
+          <button type="button" data-move="F'">F'</button>
+          <button type="button" data-move="B">B</button>
+          <button type="button" data-move="B'">B'</button>
+        </div>
+
+        <section id="panneau-solution" class="solution" hidden>
+          <h2 id="solution-titre">Solution</h2>
+          <ol id="solution-liste" class="solution-liste"></ol>
+          <div class="solution-controles">
+            <button id="btn-precedent" type="button" aria-label="Coup précédent">⏮</button>
+            <button id="btn-lecture" type="button" aria-label="Lecture ou pause">⏯</button>
+            <button id="btn-suivant" type="button" aria-label="Coup suivant">⏭</button>
+          </div>
+        </section>
+
+        <p class="aide">
+          Glissez une tranche pour la tourner, le fond pour orbiter. Clavier : u d l r f b (Maj =
+          sens inverse).
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la
+           démo intégrée. -->
+      <a href="../../projets/cube-solver/">← Retour à la fiche du projet</a>
+    </footer>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

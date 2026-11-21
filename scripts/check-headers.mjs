@@ -116,6 +116,53 @@ assertZone('/demos/projet-exemple/main.js', {
   'demo CSP has no external host': (csp) => !/https?:\/\//.test(csp),
 });
 
+// Per-demo relaxation: cube-solver runs its solver in a same-origin
+// Web Worker (decision log 2026-11-21). Everything else must stay as
+// closed as the generic demo zone.
+assertZone('/demos/cube-solver/assets/worker-x.js', {
+  'cube-solver CSP allows same-origin workers only': (csp) => csp.includes("worker-src 'self'"),
+  "cube-solver CSP is otherwise the demo one (scripts 'self' 'unsafe-inline')": (csp) =>
+    csp.includes("script-src 'self' 'unsafe-inline'"),
+  "cube-solver CSP keeps connect-src 'self'": (csp) => csp.includes("connect-src 'self'"),
+  'cube-solver CSP blocks framing': (csp) => csp.includes("frame-ancestors 'none'"),
+  'cube-solver CSP blocks forms': (csp) => csp.includes("form-action 'none'"),
+  'cube-solver CSP has no external host': (csp) => !/https?:\/\//.test(csp),
+});
+
+// The per-demo zone must differ from the generic demo zone by
+// worker-src ONLY — assert it directive by directive so a future edit
+// cannot widen anything else unnoticed.
+{
+  const dirs = (csp) =>
+    new Map(
+      csp
+        .split(';')
+        .map((d) => d.trim())
+        .filter(Boolean)
+        .map((d) => {
+          const [name, ...rest] = d.split(/\s+/);
+          return [name, rest.join(' ')];
+        }),
+    );
+  const generic = dirs(
+    headersFor('/demos/projet-exemple/main.js').get('content-security-policy') ?? '',
+  );
+  const cube = dirs(
+    headersFor('/demos/cube-solver/assets/worker-x.js').get('content-security-policy') ?? '',
+  );
+  for (const name of new Set([...generic.keys(), ...cube.keys()])) {
+    if (name === 'worker-src') continue;
+    if (generic.get(name) !== cube.get(name)) {
+      errors.push(
+        `cube-solver CSP diverges from the demo CSP on "${name}" — worker-src must be the only difference`,
+      );
+    }
+  }
+  if (cube.get('worker-src') !== "'self'") {
+    errors.push(`cube-solver worker-src must be exactly 'self', found "${cube.get('worker-src')}"`);
+  }
+}
+
 const astroAssets = headersFor('/_astro/app.css');
 if (!/immutable/.test(astroAssets.get('cache-control') ?? '')) {
   errors.push('/_astro/*: hashed assets must be cached immutable');
