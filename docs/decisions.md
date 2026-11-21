@@ -118,3 +118,17 @@ précise que textes, images et CV restent tous droits réservés.
 astro (le framework) ; en dev : prettier + prettier-plugin-astro (formatage),
 @astrojs/check + typescript (exigés par `astro check`).
 Rien d'autre ; toute dépendance future sera justifiée ici.
+
+## 2026-11-21 — Démos : Web Worker autorisé par démo (cube-solver)
+
+Le solveur de la démo cube-solver tourne dans un Web Worker même-origine ;
+la zone `/demos/*` garde `worker-src 'none'`. Retenu : une zone dédiée
+`/demos/cube-solver/*` dans `_headers` avec `worker-src 'self'` pour seul
+changement — c'est l'assouplissement « par démo, avec entrée au journal »
+que le commentaire du fichier prévoyait. Conséquence assumée : un service
+worker devient théoriquement possible sur ce chemin ; le scan du build
+échoue toujours sur toute référence `serviceWorker`, sa portée serait de
+toute façon limitée à `/demos/cube-solver/`, et toute démo reste relue
+avant publication. `scripts/check-headers.mjs` vérifie la nouvelle zone.
+Dépendances de la démo (dans son dossier, lockfile commité) : three (MIT,
+bundlé au build) et vite (dev).

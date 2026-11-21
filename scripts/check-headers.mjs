@@ -116,6 +116,19 @@ assertZone('/demos/projet-exemple/main.js', {
   'demo CSP has no external host': (csp) => !/https?:\/\//.test(csp),
 });
 
+// Per-demo relaxation: cube-solver runs its solver in a same-origin
+// Web Worker (decision log 2026-11-21). Everything else must stay as
+// closed as the generic demo zone.
+assertZone('/demos/cube-solver/assets/worker-x.js', {
+  'cube-solver CSP allows same-origin workers only': (csp) => csp.includes("worker-src 'self'"),
+  "cube-solver CSP is otherwise the demo one (scripts 'self' 'unsafe-inline')": (csp) =>
+    csp.includes("script-src 'self' 'unsafe-inline'"),
+  "cube-solver CSP keeps connect-src 'self'": (csp) => csp.includes("connect-src 'self'"),
+  'cube-solver CSP blocks framing': (csp) => csp.includes("frame-ancestors 'none'"),
+  'cube-solver CSP blocks forms': (csp) => csp.includes("form-action 'none'"),
+  'cube-solver CSP has no external host': (csp) => !/https?:\/\//.test(csp),
+});
+
 const astroAssets = headersFor('/_astro/app.css');
 if (!/immutable/.test(astroAssets.get('cache-control') ?? '')) {
   errors.push('/_astro/*: hashed assets must be cached immutable');

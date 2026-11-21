@@ -28,6 +28,16 @@
   ! Content-Security-Policy
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; worker-src 'none'; upgrade-insecure-requests
 
+# ---- cube-solver: per-demo relaxation (decision log 2026-11-21) ----
+# Same CSP as the demo zone except worker-src 'self': the Rubik's
+# solver runs in a same-origin dedicated Web Worker. This also makes a
+# same-origin service worker *possible* for this path; the build scan
+# still hard-fails on any serviceWorker reference, and a rogue SW would
+# be scoped to /demos/cube-solver/ only.
+/demos/cube-solver/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; object-src 'none'; worker-src 'self'; upgrade-insecure-requests
+
 # ---- Caching: hashed assets are immutable, HTML keeps the default
 # (max-age=0, must-revalidate + ETag) ----
 /_astro/*
