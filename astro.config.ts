@@ -43,5 +43,24 @@ export default defineConfig({
       // Same reason: prevent small scripts/assets from being inlined.
       assetsInlineLimit: 0,
     },
+    plugins: [
+      {
+        // Dev server only: resolve /demos/<slug>/ to its index.html.
+        // In production Cloudflare's html_handling does this; Astro's
+        // dev server does not resolve directory indexes under public/,
+        // so demo links 404ed in dev while working once deployed.
+        name: 'demo-directory-index',
+        apply: 'serve',
+        configureServer(server) {
+          server.middlewares.use((req, _res, next) => {
+            const [path, query] = (req.url ?? '').split('?');
+            if (path.startsWith('/demos/') && path.endsWith('/')) {
+              req.url = `${path}index.html${query ? `?${query}` : ''}`;
+            }
+            next();
+          });
+        },
+      },
+    ],
   },
 });

@@ -132,3 +132,12 @@ toute façon limitée à `/demos/cube-solver/`, et toute démo reste relue
 avant publication. `scripts/check-headers.mjs` vérifie la nouvelle zone.
 Dépendances de la démo (dans son dossier, lockfile commité) : three (MIT,
 bundlé au build) et vite (dev).
+
+## 2026-11-21 — Dev : /demos/<slug>/ servait un 404
+
+Le serveur de dev d'Astro ne résout pas l'index.html des dossiers de
+`public/` ; en production, c'est le `html_handling` de Cloudflare qui le
+fait, donc personne ne l'avait vu avant de cliquer une démo en local.
+Retenu : un plugin Vite de 15 lignes dans `astro.config.ts`, actif en
+dev uniquement (`apply: 'serve'`), qui réécrit `/demos/.../` vers son
+`index.html`. Aucun effet sur le build ni sur la prod.
