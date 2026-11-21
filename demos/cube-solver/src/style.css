@@ -1,0 +1,292 @@
+/* RÈGLE PORTFOLIO — polices système uniquement (ou des fichiers de
+   police EMBARQUÉS dans le projet, jamais un CDN). */
+
+:root {
+  --fond: #0e1015;
+  --fond-panneau: #171a21;
+  --fond-bouton: #21252e;
+  --fond-bouton-survol: #2a2f3a;
+  --bordure: #2a2e36;
+  --texte: #e8eaee;
+  --texte-sourd: #9aa1ac;
+  --accent: #4f8cff;
+  --accent-doux: rgba(79, 140, 255, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: var(--accent-doux);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background:
+    radial-gradient(60rem 30rem at 20% -10%, rgba(79, 140, 255, 0.07), transparent), var(--fond);
+  color: var(--texte);
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
+/* --- En-tête ------------------------------------------------------------- */
+
+.entete {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1rem;
+  padding: 0.9rem 1.25rem 0.6rem;
+}
+
+.entete h1 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: 0.01em;
+}
+
+.statut {
+  margin: 0;
+  min-height: 1.3em;
+  color: var(--texte-sourd);
+  font-size: 0.95rem;
+}
+
+/* --- Disposition principale ---------------------------------------------- */
+
+.contenu {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0 1.25rem 1rem;
+  min-height: 0;
+}
+
+.scene {
+  position: relative;
+  min-height: 55vh;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--bordure);
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.35);
+  /* Un drag de tranche ne doit jamais faire défiler la page (tactile). */
+  touch-action: none;
+}
+
+.panneau {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--fond-panneau);
+  border: 1px solid var(--bordure);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+/* Écran large : scène à gauche, panneau à droite. */
+@media (min-width: 900px) {
+  .contenu {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  .scene {
+    flex: 1 1 auto;
+    min-height: calc(100vh - 11rem);
+  }
+
+  .panneau {
+    flex: 0 0 21rem;
+    align-self: flex-start;
+    max-height: calc(100vh - 11rem);
+    overflow-y: auto;
+  }
+}
+
+/* --- Boutons --------------------------------------------------------------- */
+
+button {
+  font: inherit;
+  color: var(--texte);
+  background: var(--fond-bouton);
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  min-height: 44px; /* cible tactile */
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    transform 80ms ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--fond-bouton-survol);
+  border-color: #3a4150;
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+button:focus-visible,
+input[type='range']:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+/* Résoudre : l'action vedette de la démo. */
+#btn-resoudre:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0b0d12;
+  font-weight: 700;
+}
+
+#btn-resoudre:hover:not(:disabled) {
+  background: #6ba0ff;
+}
+
+/* --- Vitesse ---------------------------------------------------------------- */
+
+.vitesse {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vitesse label {
+  font-weight: 600;
+}
+
+.vitesse .borne {
+  color: var(--texte-sourd);
+  font-size: 0.8rem;
+}
+
+.vitesse input[type='range'] {
+  flex: 1;
+  min-height: 44px; /* cible tactile */
+  accent-color: var(--accent);
+}
+
+/* --- Grille des coups -------------------------------------------------------- */
+
+.grille-coups {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.5rem;
+}
+
+/* Très petits écrans : garde des cibles tactiles confortables. */
+@media (max-width: 420px) {
+  .grille-coups {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.grille-coups button {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  padding: 0.4rem 0.2rem;
+}
+
+/* --- Panneau solution --------------------------------------------------------- */
+
+.solution {
+  border-top: 1px solid var(--bordure);
+  padding-top: 0.75rem;
+}
+
+.solution h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+}
+
+.solution-liste {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  max-height: 9rem;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--bordure) transparent;
+}
+
+.solution-liste li {
+  background: var(--fond-bouton);
+  border: 1px solid var(--bordure);
+  border-radius: 6px;
+  padding: 0.2rem 0.5rem;
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease;
+}
+
+.solution-liste li.courant {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0b0d12;
+  font-weight: 700;
+  box-shadow: 0 0 0 3px var(--accent-doux);
+}
+
+.solution-controles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+}
+
+/* --- Divers -------------------------------------------------------------------- */
+
+.aide {
+  margin: 0;
+  color: var(--texte-sourd);
+  font-size: 0.85rem;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+}
+
+footer a {
+  color: var(--texte-sourd);
+  text-decoration-color: var(--bordure);
+  transition: color 120ms ease;
+}
+
+footer a:hover {
+  color: var(--texte);
+}
+
+/* Respecte la préférence de réduction des animations (interface : les
+   transitions CSS ; la 3D reste pilotée par le curseur de vitesse). */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+
+  .solution-liste {
+    scroll-behavior: auto;
+  }
+}
