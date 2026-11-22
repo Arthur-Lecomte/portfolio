@@ -24,6 +24,8 @@ another solves it on its own: the solution shows up in notation and
 plays move by move or continuously, at an adjustable speed. The cube's
 state is remembered between visits.
 
+![The demo mid-solve: the cube replays the 20-move solution, the current move highlighted in the notation.](./solve.png)
+
 ## Under the hood
 
 Solving uses Kociemba's two-phase algorithm, implemented from scratch:
