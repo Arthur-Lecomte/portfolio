@@ -17,7 +17,7 @@ links:
 cover: ./cover.png
 coverAlt: "Un Rubik's Cube 3D mélangé, en mode sombre, à côté des boutons Mélanger, Résoudre et Réinitialiser de la démo."
 featured: false
-draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
+draft: false # publié le 2026-11-22 sur décision d'Arthur
 thirdParty:
   - name: three.js
     license: MIT
