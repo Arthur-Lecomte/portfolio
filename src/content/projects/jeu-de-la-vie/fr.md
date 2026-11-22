@@ -17,7 +17,7 @@ links:
 cover: ./cover.png
 coverAlt: 'Un canon de Gosper en pleine action sur la grille sombre du jeu de la vie, avec la bibliothèque de patterns à gauche et les compteurs de population en bas.'
 featured: false
-draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
+draft: false # publié le 2026-11-22 sur décision d'Arthur
 thirdParty: [] # rien d'embarqué : JavaScript pur, interface en polices système
 aiNote: "Projet réalisé en dirigeant une IA : j'ai cadré, testé et tranché ; elle a écrit le gros du code."
 disclaimer: "Le « jeu de la vie » désigne ici l'automate cellulaire de John Conway (1970), sans lien avec aucun jeu de société du même nom."
@@ -25,10 +25,10 @@ disclaimer: "Le « jeu de la vie » désigne ici l'automate cellulaire de John C
 
 ## L'idée
 
-Après le Rubik's Cube, un autre classique : le jeu de la vie de Conway.
-Deux règles, pas de joueur, et des structures qui semblent vivantes. Je
-voulais la version qu'on a envie de triturer : une grille vraiment sans
-bords, où on navigue comme sur une carte.
+Le jeu de la vie de Conway : deux règles, pas de joueur, et des
+structures qui semblent vivantes. Je voulais la version qu'on a envie
+de triturer : une grille vraiment sans bords, où on navigue comme sur
+une carte.
 
 ## Ce que ça fait
 
