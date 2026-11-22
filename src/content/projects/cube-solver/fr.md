@@ -3,7 +3,7 @@
 # (date, stack, liens, image) vivent ici ; en.md ne contient que le
 # texte anglais. Champs commentés = optionnels.
 title: "Rubik's Cube 3D"
-summary: 'TODO(arthur): une phrase sans jargon qui dit ce que fait le projet, 160 max'
+summary: "Un Rubik's Cube en 3D dans le navigateur : on le tourne à la main, on le mélange, et il se résout tout seul, coup par coup."
 date: 2026-11-21
 status: done # wip | done | archived
 kind: web # web | game | desktop | mod | tool
@@ -14,21 +14,23 @@ stack:
 demo: internal # la démo vit dans demos/cube-solver/
 links:
   repo: 'https://github.com/Arthur-Lecomte/CubeSolver'
-cover: ./cover.png # remplacer par une vraie image (le placeholder est gris)
-coverAlt: "TODO(arthur): ce que montre l'image, pour qui ne la voit pas"
+cover: ./cover.png
+coverAlt: "Un Rubik's Cube 3D mélangé, en mode sombre, à côté des boutons Mélanger, Résoudre et Réinitialiser de la démo."
 featured: false
 draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
 thirdParty:
   - name: three.js
     license: MIT
     url: 'https://github.com/mrdoob/three.js'
-# aiNote: "TODO(arthur): ce que tu as décidé et fait toi-même sur ce projet"
+aiNote: "Projet réalisé en dirigeant une IA : j'ai cadré, testé et tranché ; elle a écrit le gros du code."
 disclaimer: "Projet personnel non officiel, sans lien avec Rubik's Brand Ltd ni Spin Master ; « Rubik's Cube » désigne ici le casse-tête."
 ---
 
 ## L'idée
 
-TODO(arthur): pourquoi ce truc existe.
+Le Rubik's Cube, tout le monde voit ce que c'est. C'était le candidat
+idéal pour une première démo : un objet qu'on a envie de manipuler, de la
+3D, et derrière, un vrai problème d'algorithmique à résoudre proprement.
 
 ## Ce que ça fait
 
@@ -39,8 +41,6 @@ boutons de notation (U, U', D… B'). Un bouton mélange le cube (25 coups
 animés), un autre le résout tout seul : la solution s'affiche en notation,
 se lit coup par coup ou en continu, avec une vitesse réglable. L'état du
 cube est retenu d'une visite à l'autre.
-
-TODO(arthur): une capture.
 
 ## Sous le capot
 
@@ -55,8 +55,19 @@ chaque solution.
 
 ## Ce que j'ai appris ou décidé
 
-TODO(arthur)
+Le choix structurant : un solveur écrit from scratch plutôt qu'une
+bibliothèque toute faite — c'était tout l'intérêt du projet. Le calcul
+part dans un Web Worker pour que l'animation ne gèle jamais, et le
+harnais de 200 mélanges existe parce qu'un solveur qui a l'air juste
+peut très bien se tromper en silence. Le reste s'est décidé en testant :
+les cas limites (un mélange à un ou deux coups, un clic sur Résoudre
+pendant qu'un coup est encore en vol), la page qui doit survivre sans
+WebGL et sans stockage, et des contrôles utilisables au clavier.
 
 ## Limites connues
 
-TODO(arthur)
+Les tranches du milieu ne se tournent pas : glisser au centre fait
+orbiter la caméra, c'est le compromis retenu (pas de notation M, E ou S
+ici). Les solutions font une vingtaine de coups — le two-phase est
+rapide mais pas forcément optimal. Et three.js se paie : environ 570 Ko
+de JavaScript pour une démo, c'est le prix du rendu 3D.
