@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Jeu de la vie</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Jeu de la vie</h1>
+      <div class="toolbar" role="toolbar" aria-label="Contrôles de la simulation">
+        <button id="play" type="button" aria-pressed="false">Lecture</button>
+        <button id="step-btn" type="button">Pas à pas</button>
+        <label class="slider">
+          Vitesse
+          <input id="speed" type="range" min="1" max="60" value="10" />
+          <output id="speed-out" for="speed">10 gén./s</output>
+        </label>
+        <span class="sep" aria-hidden="true"></span>
+        <button id="random" type="button">Aléatoire</button>
+        <label class="slider">
+          Densité
+          <input id="density" type="range" min="5" max="60" value="25" />
+          <output id="density-out" for="density">25 %</output>
+        </label>
+        <span class="sep" aria-hidden="true"></span>
+        <button id="clear" type="button">Effacer</button>
+        <button id="recenter" type="button">Recentrer</button>
+        <button id="zoom-in" type="button" aria-label="Zoomer">+</button>
+        <button id="zoom-out" type="button" aria-label="Dézoomer">−</button>
+        <span class="sep" aria-hidden="true"></span>
+        <button id="tool-draw" type="button" aria-pressed="true">Dessiner</button>
+        <button id="tool-pan" type="button" aria-pressed="false">Déplacer</button>
+        <button id="help-btn" type="button" aria-label="Aide" aria-haspopup="dialog">?</button>
+      </div>
+    </header>
+
+    <div class="stage">
+      <aside class="patterns" aria-label="Bibliothèque de patterns">
+        <h2>Patterns</h2>
+        <p class="pattern-hint" id="pattern-hint" aria-live="polite">
+          Survole ou choisis un pattern, puis clique sur la grille pour le poser.
+        </p>
+        <ul id="pattern-list"></ul>
+      </aside>
+      <div class="board-wrap">
+        <canvas
+          id="board"
+          tabindex="0"
+          role="application"
+          aria-label="Grille du jeu de la vie. Cliquer ou glisser pour dessiner des cellules. Au clavier : flèches pour se déplacer, plus et moins pour zoomer, espace pour lancer ou mettre en pause, S pour avancer d'une génération."
+        ></canvas>
+        <p class="stats" id="stats">
+          <span>Génération <strong id="stat-gen">0</strong></span>
+          <span>Population <strong id="stat-pop">0</strong></span>
+          <span>Naissances <strong id="stat-births">0</strong></span>
+          <span>Morts <strong id="stat-deaths">0</strong></span>
+        </p>
+      </div>
+    </div>
+
+    <footer>
+      <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la
+           démo intégrée. Le slug sera ajusté à l'intégration. -->
+      <a href="../../projets/jeu-de-la-vie/">← Retour à la fiche du projet</a>
+    </footer>
+
+    <dialog id="help">
+      <h2>Le jeu de la vie</h2>
+      <p>
+        Un automate cellulaire imaginé par John Conway en 1970. Chaque case de la grille est vivante
+        ou morte, et évolue selon deux règles :
+      </p>
+      <ul>
+        <li>une cellule morte entourée d'exactement 3 voisines naît ;</li>
+        <li>une cellule vivante survit avec 2 ou 3 voisines, sinon elle meurt.</li>
+      </ul>
+      <h3>Commandes</h3>
+      <ul>
+        <li>
+          <strong>Dessiner</strong> : cliquer ou glisser sur la grille ajoute ou efface des
+          cellules.
+        </li>
+        <li>
+          <strong>Patterns</strong> : choisir une structure dans la liste, puis cliquer sur la
+          grille pour la poser (plusieurs fois si besoin). <kbd>Échap</kbd> annule.
+        </li>
+        <li>
+          <strong>Naviguer</strong> : molette ou pincement pour zoomer, glisser avec l'outil «
+          Déplacer », le bouton droit ou deux doigts pour se déplacer.
+        </li>
+        <li>
+          <strong>Clavier</strong> (grille sélectionnée) : <kbd>Espace</kbd> lecture/pause,
+          <kbd>S</kbd> pas à pas, flèches pour se déplacer, <kbd>+</kbd>/<kbd>−</kbd> pour zoomer.
+        </li>
+        <li>
+          <strong>Aléatoire</strong> : sème des cellules au hasard dans la zone visible, selon la
+          densité choisie.
+        </li>
+      </ul>
+      <form method="dialog">
+        <button type="submit">Fermer</button>
+      </form>
+    </dialog>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
