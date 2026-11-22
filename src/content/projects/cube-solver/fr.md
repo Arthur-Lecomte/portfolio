@@ -42,6 +42,8 @@ animés), un autre le résout tout seul : la solution s'affiche en notation,
 se lit coup par coup ou en continu, avec une vitesse réglable. L'état du
 cube est retenu d'une visite à l'autre.
 
+![La démo en pleine résolution : le cube rejoue la solution de 20 coups, le coup courant surligné dans la notation.](./solve.png)
+
 ## Sous le capot
 
 La résolution utilise l'algorithme two-phase de Kociemba, implémenté from
