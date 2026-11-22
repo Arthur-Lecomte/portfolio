@@ -141,3 +141,11 @@ fait, donc personne ne l'avait vu avant de cliquer une démo en local.
 Retenu : un plugin Vite de 15 lignes dans `astro.config.ts`, actif en
 dev uniquement (`apply: 'serve'`), qui réécrit `/demos/.../` vers son
 `index.html`. Aucun effet sur le build ni sur la prod.
+
+## 2026-11-22 — favicon.ico à la racine
+
+Les pages du site déclarent `favicon.svg`, mais les démos ne déclarent
+rien : le navigateur retombe sur `/favicon.ico`, qui n'existait pas —
+un 404 en console sur chaque démo. Retenu : un vrai `favicon.ico`
+(32×32, PNG encapsulé) généré depuis le SVG, posé dans `public/`. Ça
+couvre toutes les démos, présentes et futures, sans toucher à leur code.
