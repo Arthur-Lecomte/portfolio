@@ -10,10 +10,9 @@ disclaimer: "“Game of Life” here means John Conway's cellular automaton (197
 
 ## The idea
 
-After the Rubik's Cube, another classic: Conway's Game of Life. Two
-rules, no player, and structures that seem alive. I wanted the version
-you feel like poking at: a grid genuinely without edges, where you move
-around like on a map.
+Conway's Game of Life: two rules, no player, and structures that seem
+alive. I wanted the version you feel like poking at: a grid genuinely
+without edges, where you move around like on a map.
 
 ## What it does
 
