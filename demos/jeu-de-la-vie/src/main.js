@@ -21,10 +21,16 @@ let tool = 'draw'; // 'draw' | 'pan'
 let pendingPattern = null; // pattern awaiting placement, with ghost preview
 let hoverCell = null; // [x, y] under the pointer, for the ghost
 
+// Redraw only when the scene changed: the GPU is shared with every other
+// window, and an idle demo repainting at 60 fps makes videos playing next
+// to it stutter.
+let needsRender = true;
+
 // ---- DOM ------------------------------------------------------------
 
 const canvas = document.getElementById('board');
-const ctx = canvas.getContext('2d');
+// Opaque canvas: nothing shows through it, and it is cheaper to composite.
+const ctx = canvas.getContext('2d', { alpha: false });
 const boardWrap = canvas.parentElement;
 
 const playBtn = document.getElementById('play');
@@ -75,6 +81,7 @@ function zoomAt(px, py, factor) {
   camera.scale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, camera.scale * factor));
   camera.x = anchor.x - (px - w / 2) / camera.scale;
   camera.y = anchor.y - (py - h / 2) / camera.scale;
+  needsRender = true;
 }
 
 // ---- Rendering ------------------------------------------------------
@@ -161,6 +168,7 @@ function doStep() {
   lastBirths = res.births;
   lastDeaths = res.deaths;
   generation += 1;
+  needsRender = true;
 }
 
 function setRunning(value) {
@@ -185,8 +193,11 @@ function tick(now) {
   } else {
     accumulator = 0;
   }
-  render();
-  updateStats();
+  if (needsRender) {
+    needsRender = false;
+    render();
+    updateStats();
+  }
   requestAnimationFrame(tick);
 }
 
@@ -198,6 +209,7 @@ function clearGrid() {
   lastBirths = 0;
   lastDeaths = 0;
   setRunning(false);
+  needsRender = true;
 }
 
 function randomFill() {
@@ -214,9 +226,11 @@ function randomFill() {
       if (Math.random() < density) cells.add(key(x, y));
     }
   }
+  needsRender = true;
 }
 
 function recenter() {
+  needsRender = true;
   const box = boundingBox(cells);
   const { w, h } = viewSize();
   if (!box) {
@@ -252,10 +266,12 @@ function placePattern(pattern, at) {
   for (const [dx, dy] of pattern.cells) {
     cells.add(key(ox + dx, oy + dy));
   }
+  needsRender = true;
 }
 
 function cancelPattern() {
   pendingPattern = null;
+  needsRender = true;
   for (const btn of patternList.querySelectorAll('button')) {
     btn.setAttribute('aria-pressed', 'false');
   }
@@ -313,6 +329,7 @@ function paintCell(x, y) {
   const k = key(x, y);
   if (paintValue) cells.add(k);
   else cells.delete(k);
+  needsRender = true;
 }
 
 function paintLine(from, to) {
@@ -353,6 +370,7 @@ canvas.addEventListener('pointerdown', (e) => {
     // Stamp on release, so a starting pinch gesture does not place it.
     placeArmed = true;
     hoverCell = cell;
+    needsRender = true;
     return;
   }
   paintValue = !cells.has(key(cell[0], cell[1]));
@@ -363,6 +381,7 @@ canvas.addEventListener('pointerdown', (e) => {
 canvas.addEventListener('pointermove', (e) => {
   const pos = eventPos(e);
   hoverCell = screenToCell(pos.x, pos.y);
+  if (pendingPattern) needsRender = true; // the ghost follows the pointer
 
   if (pointers.has(e.pointerId)) {
     const prev = pointers.get(e.pointerId);
@@ -381,6 +400,7 @@ canvas.addEventListener('pointermove', (e) => {
       }
       camera.x -= (center.x - prevCenter.x) / camera.scale;
       camera.y -= (center.y - prevCenter.y) / camera.scale;
+      needsRender = true;
       return;
     }
 
@@ -388,6 +408,7 @@ canvas.addEventListener('pointermove', (e) => {
       camera.x -= (pos.x - panLast.x) / camera.scale;
       camera.y -= (pos.y - panLast.y) / camera.scale;
       panLast = pos;
+      needsRender = true;
       return;
     }
 
@@ -413,6 +434,7 @@ canvas.addEventListener('pointerup', (e) => {
 canvas.addEventListener('pointercancel', releasePointer);
 canvas.addEventListener('pointerleave', () => {
   hoverCell = null;
+  if (pendingPattern) needsRender = true; // erase the ghost
 });
 
 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
@@ -468,6 +490,7 @@ canvas.addEventListener('keydown', (e) => {
     default:
       return;
   }
+  needsRender = true;
   e.preventDefault();
 });
 
