@@ -17,7 +17,7 @@ links:
 cover: ./cover.png
 coverAlt: "Vue de dessus d'un circuit sinueux sombre : une file de petites voitures bleues aborde une épingle, menée par la voiture jaune du meilleur élève dont les capteurs de distance sont tracés ; à droite, le tableau de bord affiche la promotion, les voitures en piste et le record de l'école."
 featured: false
-draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
+draft: false # publié le 2026-11-23 sur décision d'Arthur
 thirdParty: [] # rien d'embarqué : JavaScript pur, tout est dessiné au canvas
 aiNote: "Projet réalisé en dirigeant une IA : j'ai cadré, testé et tranché ; elle a écrit le gros du code."
 ---
@@ -67,7 +67,7 @@ temps plutôt que par nombre d'images.
 Le plus dur n'était pas l'algorithme, c'était de le rendre regardable.
 D'où la métaphore de l'auto-école : élèves, promotions, record de
 l'école — avec le vrai terme technique en sous-titre à chaque fois, pour
-que ça reste honnête sans être abscons. Les champions embarqués ne sont
+que ça reste honnête sans perdre personne. Les champions embarqués ne sont
 pas simplement les meilleurs scores : ils sont sélectionnés pour leur
 robustesse à de petites perturbations du départ, afin de rouler pareil
 d'un navigateur à l'autre. L'éditeur de circuit a demandé plusieurs
