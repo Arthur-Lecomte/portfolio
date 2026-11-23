@@ -17,7 +17,7 @@ links:
 cover: ./cover.png
 coverAlt: "Démo sur fond sombre : dix pendules doubles presque identiques, dont les traînées encore superposées dessinent un ruban dégradé du turquoise au rose, tandis qu'un pendule déjà divergé trace à part de grandes boucles violettes ; en bas, les boutons Pause et Relancer et les curseurs de réglage."
 featured: false
-draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
+draft: false # publié le 2026-11-24 sur décision d'Arthur
 thirdParty: [] # rien d'embarqué : JavaScript pur, tout est dessiné au canvas
 aiNote: "Projet réalisé en dirigeant une IA : j'ai cadré, testé et tranché ; elle a écrit le gros du code."
 ---
