@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Effet Papillon — double pendule chaotique</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Effet Papillon</h1>
+        <p class="tagline">
+          Un double pendule chaotique : des départs presque identiques, des trajectoires vite très
+          différentes.
+        </p>
+      </header>
+
+      <canvas
+        id="scene"
+        tabindex="0"
+        aria-label="Simulation du double pendule. Glisser une masse pour choisir la position de départ. Au clavier : flèches gauche et droite pour le premier angle, haut et bas pour le second (Maj pour affiner), espace pour lecture ou pause."
+      ></canvas>
+
+      <section class="controls" aria-label="Réglages de la simulation">
+        <div class="buttons">
+          <button id="toggle" type="button">Pause</button>
+          <button id="reset" type="button">Relancer</button>
+        </div>
+        <label>
+          Pendules : <output id="count-out">10</output>
+          <input id="count" type="range" min="2" max="30" step="1" value="10" />
+        </label>
+        <label>
+          Écart initial : <output id="eps-out">10⁻⁶ rad</output>
+          <input id="eps" type="range" min="-8" max="-2" step="1" value="-6" />
+        </label>
+        <label>
+          Vitesse : <output id="speed-out">×1,0</output>
+          <input id="speed" type="range" min="0.1" max="2" step="0.1" value="1" />
+        </label>
+      </section>
+
+      <section class="graph" aria-label="Divergence des trajectoires">
+        <p id="graph-title">Écart maximal entre les bouts (m, échelle log) — t = 0,0 s</p>
+        <canvas
+          id="graph"
+          role="img"
+          aria-label="Graphique : écart maximal entre les bouts des pendules au cours du temps, en échelle logarithmique. La pente régulière traduit une divergence exponentielle."
+        ></canvas>
+      </section>
+    </main>
+    <footer>
+      <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la
+           démo intégrée. Le slug sera ajusté à l'intégration. -->
+      <a href="../../projets/effet-papillon/">← Retour à la fiche du projet</a>
+    </footer>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
