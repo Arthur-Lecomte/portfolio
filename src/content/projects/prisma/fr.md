@@ -17,7 +17,7 @@ links:
 cover: ./cover.png
 coverAlt: "Un rayon de lumière blanche traverse un prisme triangulaire sur fond sombre et ressort en éventail arc-en-ciel vers un mur incliné, avec la barre d'outils d'objets sur la gauche."
 featured: false
-draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
+draft: false # publié le 2026-11-23 sur décision d'Arthur
 thirdParty: [] # rien d'embarqué : JavaScript pur, icônes SVG et styles faits main
 aiNote: "Projet réalisé en dirigeant une IA : j'ai cadré, testé et tranché ; elle a écrit le gros du code."
 disclaimer: '« Prisma » est le nom de ce bac à sable optique, sans lien avec aucun logiciel ou produit existant du même nom.'
