@@ -48,7 +48,7 @@ mode advances the simulation by time budget rather than by frame count.
 The hard part was not the algorithm, it was making it watchable. Hence
 the driving-school metaphor: students, classes, school record — with
 the real technical term as a subtitle every time, so it stays honest
-without being opaque. The embedded champions are not simply the top
+without losing anyone. The embedded champions are not simply the top
 scores: they are selected for their robustness to small perturbations
 of the start, so they drive the same from one browser to the next. The
 track editor took several iterations: a too-tight stroke is
