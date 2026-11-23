@@ -1,0 +1,416 @@
+/* Auto-École — dark techy theme. System fonts only (no external requests). */
+
+:root {
+  --bg: #0e1218;
+  --bg-raised: #151b24;
+  --bg-inset: #0a0e13;
+  --border: #2a3442;
+  --text: #e4ebf3;
+  --text-dim: #9aa8b8;
+  --accent: #52d6fb;
+  --accent-dim: #2a7c96;
+  --gold: #ffd166;
+  --radius: 10px;
+}
+
+/* Author styles on elements like .overlay would otherwise beat the UA's
+   non-!important [hidden] rule. */
+[hidden] {
+  display: none !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app {
+  width: min(1180px, 100% - 2rem);
+  margin: 0 auto;
+  flex: 1;
+}
+
+.app-header {
+  padding: 1.4rem 0 1rem;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.04em;
+}
+
+h1::after {
+  /* Decorative: the empty alternative text keeps it out of the h1's
+     accessible name. */
+  content: ' 🚗' / '';
+}
+
+.tagline {
+  margin: 0.4rem 0 0;
+  color: var(--text-dim);
+  max-width: 62ch;
+}
+
+h2 {
+  font-size: 1rem;
+  margin: 0 0 0.4rem;
+  letter-spacing: 0.02em;
+}
+
+.sub {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: normal;
+  color: var(--text-dim);
+}
+
+/* ---- Layout ---- */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 1rem;
+  align-items: start;
+}
+
+.stage {
+  position: relative;
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+}
+
+.stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none; /* the track editor needs raw pointer moves */
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  background: rgba(10, 14, 19, 0.82);
+  text-align: center;
+  padding: 1rem;
+}
+
+.overlay p {
+  margin: 0;
+  max-width: 46ch;
+}
+
+.status-pill:empty {
+  /* Stays in the accessibility tree (role=status) so the first message is
+     reliably announced; only the empty chrome is hidden. */
+  visibility: hidden;
+}
+
+.status-pill {
+  position: absolute;
+  top: 0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  background: rgba(10, 14, 19, 0.88);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.85rem;
+  color: var(--text);
+  pointer-events: none;
+  max-width: calc(100% - 1.5rem);
+  text-align: center;
+}
+
+.editor-accept {
+  position: absolute;
+  bottom: 0.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ---- Dashboard ---- */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.stat {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.7rem;
+}
+
+.stat dt {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+.stat dt .sub {
+  font-size: 0.7rem;
+}
+
+.stat dd {
+  margin: 0.1rem 0 0;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+#stat-record {
+  color: var(--gold);
+}
+
+.controls,
+.tracks {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+button {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg-inset);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent-dim);
+}
+
+button.primary {
+  border-color: var(--accent-dim);
+  background: #12222c;
+}
+
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Segmented speed selector built on radio buttons. */
+.speed {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.speed legend {
+  font-size: 0.82rem;
+  color: var(--text-dim);
+  padding: 0;
+  margin-bottom: 0.3rem;
+}
+
+.segmented {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented label {
+  padding: 0.3rem 0.85rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  border-right: 1px solid var(--border);
+}
+
+.segmented label:last-of-type {
+  border-right: 0;
+}
+
+.segmented input:checked + label {
+  background: var(--accent-dim);
+  color: #fff;
+}
+
+.segmented input:focus-visible + label {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.slider {
+  display: grid;
+  grid-template-columns: 1fr 3rem;
+  gap: 0.2rem 0.5rem;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.slider > span {
+  grid-column: 1 / -1;
+  color: var(--text-dim);
+}
+
+.slider input {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.slider output {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Track list ---- */
+
+.track-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.track-item {
+  display: flex;
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+.track-item > button.select {
+  flex: 1;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.track-item .difficulty {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  align-self: center;
+}
+
+.track-item[data-current='true'] > button.select {
+  border-color: var(--accent);
+  background: #12222c;
+}
+
+/* Non-color cue for the selected track (WCAG 1.4.1). */
+.track-item[data-current='true'] > button.select > span:first-child::before {
+  content: '✓ ' / '';
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.track-item > button.delete {
+  padding: 0.45rem 0.6rem;
+}
+
+/* ---- Pedagogy panels ---- */
+
+.panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.panel {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.8rem;
+}
+
+.panel .sub {
+  margin: 0 0 0.5rem;
+}
+
+.panel canvas {
+  display: block;
+  width: 100%;
+  height: 210px;
+  background: var(--bg-inset);
+  border-radius: 6px;
+}
+
+.panel-text p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+}
+
+/* ---- Footer ---- */
+
+footer {
+  width: min(1180px, 100% - 2rem);
+  margin: 0 auto;
+  padding: 1rem 0 1.4rem;
+  font-size: 0.9rem;
+}
+
+footer a {
+  color: var(--accent);
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 920px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}

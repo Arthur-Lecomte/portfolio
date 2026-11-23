@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Des petites voitures apprennent à conduire par neuroévolution : capteurs, réseau de neurones et sélection génétique, génération après génération."
+    />
+    <title>Auto-École — des voitures apprennent à conduire</title>
+  </head>
+  <body>
+    <main class="app">
+      <header class="app-header">
+        <h1>Auto-École</h1>
+        <p class="tagline">
+          Personne ne leur a appris à conduire : ces élèves partent de zéro. Capteurs de distance →
+          petit réseau de neurones → sélection génétique, et chaque promotion conduit un peu mieux
+          que la précédente.
+        </p>
+      </header>
+
+      <div class="layout">
+        <section class="stage" aria-label="Piste d’entraînement">
+          <canvas
+            id="scene"
+            role="img"
+            aria-label="Vue de la piste : les voitures de la promotion en cours d’entraînement"
+          ></canvas>
+          <div id="overlay" class="overlay" hidden>
+            <p id="overlay-text"></p>
+            <button id="overlay-action" type="button" hidden></button>
+          </div>
+          <p id="status-pill" class="status-pill" role="status"></p>
+          <button id="editor-accept" type="button" class="editor-accept primary" hidden>
+            ✓ Valider ce circuit
+          </button>
+        </section>
+
+        <section class="dashboard" aria-label="Tableau de bord">
+          <!-- Plain spans, not <output>: these change many times per second
+               and must not be implicit live regions. -->
+          <dl class="scoreboard">
+            <div class="stat">
+              <dt>Promotion <span class="sub">génération</span></dt>
+              <dd><span id="stat-gen">1</span></dd>
+            </div>
+            <div class="stat">
+              <dt>En piste <span class="sub">voitures</span></dt>
+              <dd><span id="stat-alive">0</span></dd>
+            </div>
+            <div class="stat">
+              <dt>Meilleur trajet <span class="sub">cette promotion</span></dt>
+              <dd><span id="stat-best">0 m</span></dd>
+            </div>
+            <div class="stat">
+              <dt>Record de l’école <span class="sub">toutes promotions</span></dt>
+              <dd><span id="stat-record">0 m</span></dd>
+            </div>
+          </dl>
+
+          <div class="controls">
+            <div class="row">
+              <button id="btn-play" type="button" class="primary">⏸ Pause</button>
+              <button id="btn-restart" type="button">↻ Nouvelle session</button>
+              <button id="btn-champion" type="button">🏆 Voir le champion</button>
+            </div>
+            <p id="champion-hint" class="sub" hidden>
+              Le champion n’existe que sur les circuits prédéfinis.
+            </p>
+
+            <fieldset class="speed">
+              <legend>Vitesse des leçons</legend>
+              <div class="segmented" role="group">
+                <input type="radio" name="speed" id="speed-1" value="1" checked />
+                <label for="speed-1">×1</label>
+                <input type="radio" name="speed" id="speed-2" value="2" />
+                <label for="speed-2">×2</label>
+                <input type="radio" name="speed" id="speed-8" value="8" />
+                <label for="speed-8">×8</label>
+                <input type="radio" name="speed" id="speed-max" value="max" />
+                <label for="speed-max">Max</label>
+              </div>
+            </fieldset>
+
+            <label class="slider">
+              <span>Élèves par promotion <span class="sub">taille de population</span></span>
+              <input id="in-pop" type="range" min="20" max="100" step="10" value="60" />
+              <output id="out-pop">60</output>
+            </label>
+
+            <label class="slider">
+              <span>Audace des mutations <span class="sub">force des variations</span></span>
+              <input id="in-sigma" type="range" min="0.05" max="0.5" step="0.01" value="0.18" />
+              <output id="out-sigma">0,18</output>
+            </label>
+          </div>
+
+          <div class="tracks">
+            <h2>Le choix du circuit</h2>
+            <div id="track-list" class="track-list"></div>
+            <button id="btn-draw" type="button">✏️ Tracer mon circuit</button>
+          </div>
+        </section>
+      </div>
+
+      <section class="panels" aria-label="Panneau pédagogique">
+        <div class="panel">
+          <h2>Dans la tête du premier de la classe</h2>
+          <p class="sub">
+            Le réseau de neurones du meilleur élève, en direct : à gauche ce qu’il perçoit, à droite
+            ce qu’il décide.
+          </p>
+          <canvas
+            id="netviz"
+            role="img"
+            aria-label="Schéma animé du réseau de neurones du meilleur élève"
+          ></canvas>
+        </div>
+        <div class="panel">
+          <h2>Les progrès de l’école</h2>
+          <p class="sub">
+            Distance parcourue par promotion : le meilleur élève (trait jaune continu) et la moyenne
+            de la classe (trait gris pointillé).
+          </p>
+          <canvas
+            id="chart"
+            role="img"
+            aria-label="Courbe de progression : meilleur trajet et moyenne par génération"
+          ></canvas>
+        </div>
+        <div class="panel panel-text">
+          <h2>Comment ça marche ?</h2>
+          <p>
+            Chaque voiture « voit » la piste avec 5 capteurs de distance et connaît sa vitesse. Un
+            petit réseau de neurones transforme ces 6 nombres en deux décisions : tourner et
+            accélérer. À la fin de chaque promotion, les meilleurs élèves ont des « enfants » :
+            copies mélangées de leurs réseaux, avec quelques mutations aléatoires. Les maladroits
+            sortent de la route, les bons transmettent leur conduite — c’est la neuroévolution.
+          </p>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la
+           démo intégrée. Le slug sera ajusté à l'intégration. -->
+      <a href="../../projets/auto-ecole/">← Retour à la fiche du projet</a>
+    </footer>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
