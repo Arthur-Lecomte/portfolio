@@ -147,6 +147,7 @@ export function createCubeView(container, callbacks = {}) {
     for (let i = 0; i < 54; i++) {
       materiauxStickers[i].color.set(COULEURS[etat[i]] ?? COULEUR_PLASTIQUE);
     }
+    besoinRendu = true;
   }
 
   // --- Moteur d'animation : file de coups ----------------------------------
@@ -156,6 +157,12 @@ export function createCubeView(container, callbacks = {}) {
     new THREE.Vector3(0, 1, 0),
     new THREE.Vector3(0, 0, 1),
   ];
+
+  // Rendu à la demande : le GPU est partagé entre toutes les fenêtres, et
+  // une scène immobile redessinée à 60 i/s fait saccader une vidéo qui
+  // tourne à côté. Chaque mutation visuelle lève ce drapeau ; la boucle ne
+  // rend que s'il est levé ou si la caméra a bougé (voir boucle()).
+  let besoinRendu = true;
 
   let vitesseMs = 220; // durée d'un quart de tour
   let enPause = false;
@@ -244,6 +251,7 @@ export function createCubeView(container, callbacks = {}) {
     pivot.quaternion.setFromAxisAngle(axe, angleCible);
     figerPivot(pivot);
     coupCourant = null;
+    besoinRendu = true; // clearQueue peut figer hors de tickAnimation
     callbacks.onMoveCommitted?.(move, meta, index);
     // onMoveCommitted a pu ré-alimenter la file : ne signale le vide
     // qu'une fois la file réellement épuisée.
@@ -252,6 +260,7 @@ export function createCubeView(container, callbacks = {}) {
 
   function tickAnimation(maintenant) {
     if (recalage) {
+      besoinRendu = true;
       const t = Math.min(1, (maintenant - recalage.debut) / recalage.duree);
       recalage.pivot.quaternion.setFromAxisAngle(
         recalage.axeVec,
@@ -264,6 +273,7 @@ export function createCubeView(container, callbacks = {}) {
       }
     }
     if (coupCourant) {
+      besoinRendu = true;
       const t = Math.min(1, (maintenant - coupCourant.debut) / coupCourant.duree);
       coupCourant.pivot.quaternion.setFromAxisAngle(
         coupCourant.axe,
@@ -470,6 +480,7 @@ export function createCubeView(container, callbacks = {}) {
       const s = pointPlan.getComponent(geste.tIdx) - geste.impact.getComponent(geste.tIdx);
       geste.angle = Math.max(-Math.PI, Math.min(Math.PI, s * geste.sigma * RAD_PAR_UNITE));
       geste.pivot.quaternion.setFromAxisAngle(geste.axeVec, geste.angle);
+      besoinRendu = true;
     }
   }
 
@@ -481,6 +492,7 @@ export function createCubeView(container, callbacks = {}) {
     const terminer = () => {
       g.pivot.quaternion.setFromAxisAngle(g.axeVec, cible);
       figerPivot(g.pivot);
+      besoinRendu = true; // setDragEnabled peut figer hors de tickAnimation
       // Angle horaire autour de la NORMALE SORTANTE (axeRot · coord) :
       // jeton nu = 1 quart horaire, cohérent avec applyMove.
       const quartsHoraire = (((-quarts * g.coord) % 4) + 4) % 4;
@@ -559,6 +571,7 @@ export function createCubeView(container, callbacks = {}) {
     // déplacement vers un autre écran : le réévaluer évite un rendu flou.
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(largeur, hauteur, false);
+    besoinRendu = true; // setSize vide le tampon de dessin
   }
   const observateur = new ResizeObserver(redimensionner);
   observateur.observe(container);
@@ -573,8 +586,13 @@ export function createCubeView(container, callbacks = {}) {
   function boucle(temps) {
     rafId = requestAnimationFrame(boucle);
     tickAnimation(temps ?? performance.now());
-    controls.update();
-    renderer.render(scene, camera);
+    // update() renvoie true tant que la caméra bouge (orbite, inertie,
+    // zoom) : c'est lui qui couvre les mutations de caméra.
+    const cameraBouge = controls.update();
+    if (besoinRendu || cameraBouge) {
+      besoinRendu = false;
+      renderer.render(scene, camera);
+    }
   }
   boucle(performance.now());
 
