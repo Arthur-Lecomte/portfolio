@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Dessinez une forme&nbsp;: une chaîne de cercles en rotation (épicycles de Fourier) la redessine en boucle."
+    />
+    <title>Épicycle — une forme redessinée par des cercles</title>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Épicycle</h1>
+        <p class="tagline">
+          Dessinez une forme d'un seul trait&nbsp;: une chaîne de cercles en rotation la redessine
+          en boucle.
+        </p>
+      </header>
+
+      <div class="stage">
+        <canvas
+          id="scene"
+          role="img"
+          aria-label="Zone de dessin. Tracez une forme à main levée ; des cercles en rotation la redessinent ensuite en boucle. Les boutons de formes d'exemple remplissent cette zone sans que vous ayez à dessiner."
+        ></canvas>
+        <p id="invite" role="status">Dessinez ici, d'un seul trait.</p>
+      </div>
+
+      <div class="controls">
+        <div class="row">
+          <label for="circles">Cercles</label>
+          <input type="range" id="circles" min="1" max="200" value="48" />
+          <output id="circles-value" for="circles">48</output>
+        </div>
+        <div class="row row-speed">
+          <label for="speed">Vitesse</label>
+          <input type="range" id="speed" min="0" max="100" value="50" />
+        </div>
+        <label class="toggle">
+          <input type="checkbox" id="show-circles" checked />
+          Afficher les cercles
+        </label>
+        <button id="clear" type="button">Effacer</button>
+      </div>
+
+      <div class="examples" role="group" aria-label="Formes d'exemple">
+        <span>Exemples&nbsp;:</span>
+        <button type="button" data-example="note">Croche</button>
+        <button type="button" data-example="star">Étoile</button>
+        <button type="button" data-example="heart">Cœur</button>
+        <button type="button" data-example="bolt">Éclair</button>
+      </div>
+
+      <details class="about">
+        <summary>Comment ça marche&nbsp;?</summary>
+        <p>
+          Le trait que vous dessinez est découpé en une suite de points, un peu comme une mélodie
+          est une suite de notes. Un calcul, la transformée de Fourier discrète, décompose ce
+          parcours en une somme de rotations toutes simples&nbsp;: chaque cercle tourne à vitesse
+          constante, accroché au bord du précédent. Le bout de la chaîne repasse alors par votre
+          dessin, encore et encore. Un cercle qui tourne porté par un autre cercle est ce que les
+          astronomes anciens appelaient un épicycle — d'où le nom. Les grands cercles, lents,
+          donnent l'allure générale&nbsp;; les petits, rapides, ajoutent les détails et les angles.
+          Déplacez le curseur «&nbsp;Cercles&nbsp;» pour voir l'approximation s'affiner. Le même
+          principe sert tous les jours à compresser la musique et les images, ou à analyser des
+          signaux.
+        </p>
+      </details>
+    </main>
+    <footer>
+      <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la
+           démo intégrée. Le slug sera ajusté à l'intégration. -->
+      <a href="../../projets/epicycle/">← Retour à la fiche du projet</a>
+    </footer>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
