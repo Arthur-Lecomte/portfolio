@@ -4,6 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
+    <meta
+      name="description"
+      content="Plusieurs doubles pendules presque identiques divergent sous vos yeux : l'effet papillon, en direct."
+    />
     <title>Effet Papillon — double pendule chaotique</title>
   </head>
   <body>
@@ -25,19 +29,22 @@
       <section class="controls" aria-label="Réglages de la simulation">
         <div class="buttons">
           <button id="toggle" type="button">Pause</button>
-          <button id="reset" type="button">Relancer</button>
+          <button id="reset" type="button">Réinitialiser</button>
         </div>
         <label>
-          Pendules : <output id="count-out">10</output>
+          Pendules
           <input id="count" type="range" min="2" max="30" step="1" value="10" />
+          <output id="count-out">10</output>
         </label>
         <label>
-          Écart initial : <output id="eps-out">10⁻⁶ rad</output>
+          Écart initial
           <input id="eps" type="range" min="-8" max="-2" step="1" value="-6" />
+          <output id="eps-out">10⁻⁶ rad</output>
         </label>
         <label>
-          Vitesse : <output id="speed-out">×1,0</output>
+          Vitesse
           <input id="speed" type="range" min="0.1" max="2" step="0.1" value="1" />
+          <output id="speed-out">×1,0</output>
         </label>
       </section>
 
@@ -49,6 +56,21 @@
           aria-label="Graphique : écart maximal entre les bouts des pendules au cours du temps, en échelle logarithmique. La pente régulière traduit une divergence exponentielle."
         ></canvas>
       </section>
+
+      <details class="about">
+        <summary>Comment ça marche&nbsp;?</summary>
+        <p>
+          Un double pendule, c'est deux tiges accrochées bout à bout — un système tout simple, mais
+          chaotique : la moindre différence au départ grossit exponentiellement. Ici, plusieurs
+          copies du même pendule partent avec un écart minuscule sur le premier angle, réglable
+          jusqu'au cent-millionième de radian. Au début elles dansent ensemble, puis les
+          trajectoires se séparent — c'est l'effet papillon. Le graphe du bas suit l'écart entre les
+          bouts des pendules en échelle logarithmique : tant que la divergence est exponentielle, la
+          courbe monte en ligne à peu près droite. La physique est calculée avec une méthode
+          d'intégration précise (Runge-Kutta d'ordre 4, à pas fixe), pour être sûr que ce qu'on voit
+          est bien le chaos du pendule, pas une erreur de calcul.
+        </p>
+      </details>
     </main>
     <footer>
       <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la

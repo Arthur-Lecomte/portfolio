@@ -3,13 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jeu de la vie</title>
+    <meta
+      name="description"
+      content="Le jeu de la vie de Conway : dessinez des cellules, lancez la simulation et regardez des structures émerger."
+    />
+    <title>Jeu de la vie — automate cellulaire de Conway</title>
   </head>
   <body>
     <header class="topbar">
       <h1>Jeu de la vie</h1>
       <div class="toolbar" role="toolbar" aria-label="Contrôles de la simulation">
-        <button id="play" type="button" aria-pressed="false">Lecture</button>
+        <!-- The label alternates between Lecture and Pause and carries the
+             state on its own, so no aria-pressed here (demo charter). -->
+        <button id="play" type="button">Lecture</button>
         <button id="step-btn" type="button">Pas à pas</button>
         <label class="slider">
           Vitesse
@@ -31,11 +37,18 @@
         <span class="sep" aria-hidden="true"></span>
         <button id="tool-draw" type="button" aria-pressed="true">Dessiner</button>
         <button id="tool-pan" type="button" aria-pressed="false">Déplacer</button>
-        <button id="help-btn" type="button" aria-label="Aide" aria-haspopup="dialog">?</button>
+        <button
+          id="help-btn"
+          type="button"
+          aria-label="Comment ça marche&nbsp;?"
+          aria-haspopup="dialog"
+        >
+          ?
+        </button>
       </div>
     </header>
 
-    <div class="stage">
+    <main class="stage">
       <aside class="patterns" aria-label="Bibliothèque de patterns">
         <h2>Patterns</h2>
         <p class="pattern-hint" id="pattern-hint" aria-live="polite">
@@ -57,16 +70,20 @@
           <span>Morts <strong id="stat-deaths">0</strong></span>
         </p>
       </div>
-    </div>
+    </main>
 
     <footer>
       <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la
-           démo intégrée. Le slug sera ajusté à l'intégration. -->
+           démo intégrée. -->
       <a href="../../projets/jeu-de-la-vie/">← Retour à la fiche du projet</a>
     </footer>
 
     <dialog id="help">
-      <h2>Le jeu de la vie</h2>
+      <h2>Comment ça marche&nbsp;?</h2>
+      <p class="tagline">
+        Dessinez des cellules, lancez la simulation et regardez des structures étonnantes émerger de
+        deux règles toutes simples.
+      </p>
       <p>
         Un automate cellulaire imaginé par John Conway en 1970. Chaque case de la grille est vivante
         ou morte, et évolue selon deux règles :

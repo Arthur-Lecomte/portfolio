@@ -3,7 +3,7 @@
 # Claude drafts this from Arthur's French, Arthur reviews.
 title: 'Auto-École'
 summary: 'A driving school for virtual cars: nobody teaches them to drive, they figure it out — and every class drives a bit better than the last.'
-coverAlt: 'Top-down view of a dark winding track: a line of small blue cars enters a hairpin, led by the yellow car of the best student with its distance sensors traced; on the right, the dashboard shows the class number, cars still on track and the school record.'
+coverAlt: 'Top-down view of a dark winding track: a line of small blue cars enters a bend, led by the yellow car of the best student with its distance sensors traced; on the right, the dashboard shows the class number, cars still on track and the school record.'
 aiNote: 'Built by directing an AI: I set the frame, tested and made the calls; it wrote most of the code.'
 ---
 

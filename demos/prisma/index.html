@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Prisma — un bac à sable de lumière : lasers, miroirs, prismes et lentilles à manipuler librement."
+      content="Bac à sable d'optique 2D : lasers, miroirs, lentilles et prismes à vraie dispersion de la lumière."
     />
-    <meta name="theme-color" content="#04050a" />
+    <meta name="theme-color" content="#101216" />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a0e1c'/%3E%3Cpath d='M32 14 51 47 13 47Z' fill='none' stroke='%23a9c6ff' stroke-width='3' stroke-linejoin='round'/%3E%3Cpath d='M6 28 21 33' stroke='%23ffffff' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M43 38 59 42' stroke='%23ff5f5f' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M43 42 58 49' stroke='%2366e05a' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M42 45 55 56' stroke='%235aa0ff' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E"
@@ -23,7 +23,14 @@
       </nav>
       <div class="top-actions">
         <button id="reset" type="button" title="Revenir à la scène de départ">Réinitialiser</button>
-        <button id="help-btn" type="button" aria-label="Aide">?</button>
+        <button
+          id="help-btn"
+          type="button"
+          aria-label="Comment ça marche&nbsp;?"
+          aria-haspopup="dialog"
+        >
+          ?
+        </button>
       </div>
     </header>
 
@@ -52,12 +59,17 @@
               step="5"
               aria-label="Longueur d'onde de la lumière, en nanomètres"
             />
+            <output id="lambda-value" for="lambda-slider"></output>
             <span id="lambda-dot" aria-hidden="true"></span>
           </label>
         </div>
         <div class="inspector-row">
-          <button id="rot-ccw" type="button" aria-label="Pivoter vers la gauche">⟲ 15°</button>
-          <button id="rot-cw" type="button" aria-label="Pivoter vers la droite">⟳ 15°</button>
+          <button id="rot-ccw" type="button" aria-label="Pivoter de 15 degrés vers la gauche">
+            ⟲ 15°
+          </button>
+          <button id="rot-cw" type="button" aria-label="Pivoter de 15 degrés vers la droite">
+            ⟳ 15°
+          </button>
           <button id="delete-btn" type="button">Supprimer</button>
         </div>
       </section>
@@ -66,10 +78,10 @@
     </main>
 
     <dialog id="help" aria-labelledby="help-title">
-      <h2 id="help-title">Bienvenue dans Prisma</h2>
+      <h2 id="help-title">Comment ça marche&nbsp;?</h2>
       <p>
-        Un bac à sable de lumière : placez des lasers, puis jouez avec miroirs, prismes, lentilles,
-        murs et filtres pour sculpter les rayons.
+        Posez des lasers, des miroirs, des prismes et des lentilles&nbsp;: la lumière se propage,
+        rebondit et se décompose en vraies couleurs.
       </p>
       <ul>
         <li><strong>Choisir</strong> : touchez ou cliquez un objet.</li>

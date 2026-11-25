@@ -50,6 +50,37 @@ Un projet qui a besoin d'un serveur, d'une API externe ou d'un compte n'a
 pas de démo hébergée : sa fiche renvoie vers le repo, des captures ou un
 téléchargement. Ces règles ne se contournent pas.
 
+## Charte d'interface (décidée le 25/11/2026)
+
+But : on passe d'une démo à l'autre sans réapprendre l'interface. La charte
+unifie l'habillage, pas la disposition : chaque démo garde sa mise en page
+(page qui défile ou application plein écran) et place ses contrôles où c'est
+pertinent. La version de référence (texte complet + `src/style.css` modèle)
+vit dans le repo [demo-template](https://github.com/Arthur-Lecomte/demo-template) ;
+chaque nouveau repo de projet la porte d'office. L'essentiel :
+
+- **Thème sombre fixe**, tokens aux mêmes noms et valeurs que le mode sombre
+  du site (`--color-bg/-text/-muted/-surface/-border/-accent/-accent-contrast`,
+  `--radius-sm/md`). L'habillage ne consomme que ces tokens ; les couleurs de
+  la **scène** (ce que dessine le canvas) restent libres (`--scene-*` ou JS) :
+  c'est l'identité de la démo.
+- **Structure** : tagline sous le h1 (ou en tête du dialog d'aide en plein
+  écran) ; volet « Comment ça marche ? » obligatoire (`<details>` fermé, ou
+  `<dialog>` ouvert par un bouton « ? » — prisma l'ouvre en plus tout seul à
+  la première visite) ; `<meta name="description">` ; footer centré hors de
+  `<main>`, lien retour en `--color-muted`.
+- **Contrôles** : libellés standard (« Lecture »/« Pause » alternant,
+  « Réinitialiser », « Effacer »), pas d'emoji dans titres et libellés,
+  sliders `label > input > output`, boutons au gabarit commun avec cibles
+  ≥ 44 px, `:focus-visible` universel à l'accent.
+- **Divers** : `box-sizing` universel, `prefers-reduced-motion` respecté
+  (une simulation continue démarre en pause dans ce mode).
+
+Écarts assumés (identité ou sémantique, documentés dans les repos) : le h1
+arc-en-ciel de prisma et ses couleurs « danger », l'écho doré du record
+d'auto-ecole, les sliders de vitesse de cube-solver et d'epicycle sans
+`<output>` (valeur interne non parlante, bornes ou effet visibles à l'écran).
+
 ## Limites connues du scan
 
 L'analyse est volontairement « fail-closed » : une URL absolue légitime dans

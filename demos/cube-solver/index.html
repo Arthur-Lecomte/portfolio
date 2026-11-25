@@ -3,17 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Rubik's Cube 3D</title>
+    <meta
+      name="description"
+      content="Un Rubik's Cube 3D à mélanger ; un solveur en deux phases calcule la solution et rejoue chaque mouvement."
+    />
+    <title>Rubik's Cube 3D — solveur en deux phases</title>
   </head>
   <body>
-    <header class="entete">
+    <header class="page-header">
       <h1>Rubik's Cube 3D</h1>
-      <p id="statut" class="statut" aria-live="polite">Chargement…</p>
+      <p class="tagline">
+        Mélangez le cube, lancez la résolution : la machine trouve la solution et rejoue chaque
+        mouvement.
+      </p>
+      <p id="status" class="status" aria-live="polite">Chargement…</p>
     </header>
 
-    <main class="contenu">
-      <!-- La scène three.js est montée ici. role="img" : un aria-label est
-           ignoré sur une div générique (naming prohibited). -->
+    <main class="content">
+      <!-- The three.js scene mounts here. role="img": an aria-label is
+           ignored on a generic div (naming prohibited). -->
       <div
         id="scene"
         class="scene"
@@ -22,28 +30,28 @@
           toucher ; utilisez les boutons de coups pour jouer au clavier."
       ></div>
 
-      <section class="panneau" aria-label="Panneau de contrôle">
+      <section class="panel" aria-label="Panneau de contrôle">
         <div class="actions">
-          <button id="btn-melanger" type="button">Mélanger</button>
-          <button id="btn-resoudre" type="button" disabled>Résoudre</button>
-          <button id="btn-reinitialiser" type="button">Réinitialiser</button>
+          <button id="btn-scramble" type="button">Mélanger</button>
+          <button id="btn-solve" class="primary" type="button" disabled>Résoudre</button>
+          <button id="btn-reset" type="button">Réinitialiser</button>
         </div>
 
-        <div class="vitesse">
-          <label for="curseur-vitesse">Vitesse</label>
-          <span class="borne" aria-hidden="true">Lent</span>
+        <label class="speed">
+          Vitesse
+          <span class="range-bound" aria-hidden="true">Lent</span>
           <input
-            id="curseur-vitesse"
+            id="speed-slider"
             type="range"
             min="80"
             max="600"
             step="10"
             aria-label="Vitesse d'animation"
           />
-          <span class="borne" aria-hidden="true">Rapide</span>
-        </div>
+          <span class="range-bound" aria-hidden="true">Rapide</span>
+        </label>
 
-        <div class="grille-coups" role="group" aria-label="Coups manuels">
+        <div class="moves-grid" role="group" aria-label="Coups manuels">
           <button type="button" data-move="U">U</button>
           <button type="button" data-move="U'">U'</button>
           <button type="button" data-move="D">D</button>
@@ -58,22 +66,34 @@
           <button type="button" data-move="B'">B'</button>
         </div>
 
-        <section id="panneau-solution" class="solution" hidden>
-          <h2 id="solution-titre">Solution</h2>
-          <ol id="solution-liste" class="solution-liste"></ol>
-          <div class="solution-controles">
-            <button id="btn-precedent" type="button">Précédent</button>
-            <button id="btn-lecture" type="button">Lecture / pause</button>
-            <button id="btn-suivant" type="button">Suivant</button>
+        <section id="solution-panel" class="solution" hidden>
+          <h2 id="solution-title">Solution</h2>
+          <ol id="solution-list" class="solution-list"></ol>
+          <div class="solution-controls">
+            <button id="btn-prev" type="button">Précédent</button>
+            <button id="btn-play" type="button">Lecture</button>
+            <button id="btn-next" type="button">Suivant</button>
           </div>
         </section>
 
-        <p class="aide">
+        <p class="help">
           Glissez une tranche pour la tourner, le fond pour orbiter. Clavier : u d l r f b (Maj =
           sens inverse).
         </p>
       </section>
     </main>
+
+    <details class="about">
+      <summary>Comment ça marche&nbsp;?</summary>
+      <p>
+        Le cube à l'écran n'est pas qu'un dessin : chaque mélange est appliqué à un vrai modèle du
+        Rubik's Cube. Pour le résoudre, un solveur « en deux phases » ramène d'abord le cube dans
+        une famille de positions bien connues, puis termine depuis là — c'est la méthode classique
+        des solveurs informatiques, réécrite ici de zéro. Le calcul tourne dans un coin isolé du
+        navigateur (un Web Worker), pour que la page reste fluide pendant la recherche. La solution
+        revient sous forme d'une liste de mouvements, à rejouer d'un coup ou pas à pas.
+      </p>
+    </details>
 
     <footer>
       <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la

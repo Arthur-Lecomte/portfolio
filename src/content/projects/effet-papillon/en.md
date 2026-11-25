@@ -3,7 +3,7 @@
 # Claude drafts this from Arthur's French, Arthur reviews.
 title: 'Effet Papillon'
 summary: 'Pendulums released from almost the same spot: at first they dance together, a few seconds later each goes its own way. The butterfly effect, live.'
-coverAlt: 'Demo on a dark background: ten nearly identical double pendulums, their still-overlapping trails drawing a ribbon fading from turquoise to pink, while one pendulum that has already diverged traces its own wide purple loops; at the bottom, the Pause and Restart buttons and the settings sliders.'
+coverAlt: 'Demo on a dark background: ten nearly identical double pendulums, their still-overlapping trails drawing a ribbon fading from turquoise to pink, while one pendulum that has already diverged traces its own wide purple loops; at the bottom, the Pause and Reset buttons and the settings sliders.'
 aiNote: 'Built by directing an AI: I set the frame, tested and made the calls; it wrote most of the code.'
 ---
 

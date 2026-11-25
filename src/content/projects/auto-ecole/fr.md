@@ -15,7 +15,7 @@ demo: internal # la démo vit dans demos/auto-ecole/
 links:
   repo: 'https://github.com/Arthur-Lecomte/Auto-Ecole'
 cover: ./cover.png
-coverAlt: "Vue de dessus d'un circuit sinueux sombre : une file de petites voitures bleues aborde une épingle, menée par la voiture jaune du meilleur élève dont les capteurs de distance sont tracés ; à droite, le tableau de bord affiche la promotion, les voitures en piste et le record de l'école."
+coverAlt: "Vue de dessus d'un circuit sinueux sombre : une file de petites voitures bleues aborde un virage, menée par la voiture jaune du meilleur élève dont les capteurs de distance sont tracés ; à droite, le tableau de bord affiche la promotion, les voitures en piste et le record de l'école."
 featured: false
 draft: false # publié le 2026-11-23 sur décision d'Arthur
 thirdParty: [] # rien d'embarqué : JavaScript pur, tout est dessiné au canvas
