@@ -66,8 +66,9 @@ chaque nouveau repo de projet la porte d'office. L'essentiel :
   c'est l'identité de la démo.
 - **Structure** : tagline sous le h1 (ou en tête du dialog d'aide en plein
   écran) ; volet « Comment ça marche ? » obligatoire (`<details>` fermé, ou
-  `<dialog>` ouvert par un bouton « ? ») ; `<meta name="description">` ;
-  footer centré hors de `<main>`, lien retour en `--color-muted`.
+  `<dialog>` ouvert par un bouton « ? » — prisma l'ouvre en plus tout seul à
+  la première visite) ; `<meta name="description">` ; footer centré hors de
+  `<main>`, lien retour en `--color-muted`.
 - **Contrôles** : libellés standard (« Lecture »/« Pause » alternant,
   « Réinitialiser », « Effacer »), pas d'emoji dans titres et libellés,
   sliders `label > input > output`, boutons au gabarit commun avec cibles
@@ -77,8 +78,8 @@ chaque nouveau repo de projet la porte d'office. L'essentiel :
 
 Écarts assumés (identité ou sémantique, documentés dans les repos) : le h1
 arc-en-ciel de prisma et ses couleurs « danger », l'écho doré du record
-d'auto-ecole, le slider de cube-solver sans `<output>` (valeur interne non
-parlante).
+d'auto-ecole, les sliders de vitesse de cube-solver et d'epicycle sans
+`<output>` (valeur interne non parlante, bornes ou effet visibles à l'écran).
 
 ## Limites connues du scan
 

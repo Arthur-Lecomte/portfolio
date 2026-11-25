@@ -106,6 +106,8 @@ if (withDemo) {
   fonts, API, analytics). No cookies, no service worker. localStorage
   allowed only for saves/preferences, keys prefixed with "${slug}:".
   Must work under /demos/${slug}/ (relative paths only).
+  This file is a placeholder: the real demo starts from the demo-template
+  repo, which carries the UI charter (docs/demos.md, « Charte d'interface »).
 -->
 <html lang="fr">
   <head>

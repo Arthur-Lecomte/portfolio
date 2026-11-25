@@ -84,6 +84,14 @@ button:hover {
   border-color: var(--color-muted);
 }
 
+/* Single-glyph buttons (+, −, ?) need a floor on the horizontal axis too
+   to reach the 44px touch-target size of the demo charter. */
+#zoom-in,
+#zoom-out,
+#help-btn {
+  min-width: 44px;
+}
+
 button[aria-pressed='true'] {
   background: var(--color-accent);
   color: var(--color-accent-contrast);
