@@ -3,6 +3,17 @@
 Trois lignes par décision : le problème, l'option retenue, pourquoi.
 Les plus récentes en haut.
 
+## 2026-11-25 — Charte d'interface des démos (« charte légère »)
+
+Les six démos avaient chacune leurs couleurs, libellés et aides : on
+réapprenait l'interface à chaque fois. Retenu (décision d'Arthur) : unifier
+l'habillage sans toucher aux dispositions — tokens du mode sombre du site,
+libellés standard (Lecture/Pause, Réinitialiser, Effacer), volet « Comment
+ça marche ? » partout, cibles 44 px, zéro emoji ; les couleurs de scène
+(canvas) restent l'identité de chaque démo. Référence dans demo-template
+(CLAUDE.md + style.css modèle), résumé dans docs/demos.md ; appliqué aux six
+repos amont par agents + relecture adversariale par repo, covers régénérées.
+
 ## 2026-11-20 — `.claude/` devient public (revirement assumé)
 
 Le cadrage initial gardait `.claude/` hors du dépôt ; Arthur a changé d'avis.
