@@ -85,6 +85,7 @@ export function initUI(app) {
   const colorRow = document.getElementById('color-row');
   const whiteBtn = document.getElementById('white-btn');
   const slider = document.getElementById('lambda-slider');
+  const valueOut = document.getElementById('lambda-value');
   const dot = document.getElementById('lambda-dot');
 
   function selectedObj() {
@@ -97,6 +98,7 @@ export function initUI(app) {
     whiteBtn.setAttribute('aria-pressed', String(isWhite));
     slider.disabled = isWhite;
     slider.value = String(obj.lambda ?? 560);
+    valueOut.textContent = isWhite ? '—' : `${slider.value} nm`;
     dot.style.background = isWhite ? '#ffffff' : cssColor(wavelengthToRGB(Number(slider.value)));
   }
 

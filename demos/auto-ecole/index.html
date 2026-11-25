@@ -33,7 +33,7 @@
           </div>
           <p id="status-pill" class="status-pill" role="status"></p>
           <button id="editor-accept" type="button" class="editor-accept primary" hidden>
-            ✓ Valider ce circuit
+            Valider ce circuit
           </button>
         </section>
 
@@ -61,9 +61,9 @@
 
           <div class="controls">
             <div class="row">
-              <button id="btn-play" type="button" class="primary">⏸ Pause</button>
-              <button id="btn-restart" type="button">↻ Nouvelle session</button>
-              <button id="btn-champion" type="button">🏆 Voir le champion</button>
+              <button id="btn-play" type="button" class="primary">Pause</button>
+              <button id="btn-restart" type="button">Réinitialiser</button>
+              <button id="btn-champion" type="button">Voir le champion</button>
             </div>
             <p id="champion-hint" class="sub" hidden>
               Le champion n’existe que sur les circuits prédéfinis.
@@ -99,7 +99,7 @@
           <div class="tracks">
             <h2>Le choix du circuit</h2>
             <div id="track-list" class="track-list"></div>
-            <button id="btn-draw" type="button">✏️ Tracer mon circuit</button>
+            <button id="btn-draw" type="button">Tracer mon circuit</button>
           </div>
         </section>
       </div>
@@ -129,17 +129,18 @@
             aria-label="Courbe de progression : meilleur trajet et moyenne par génération"
           ></canvas>
         </div>
-        <div class="panel panel-text">
-          <h2>Comment ça marche ?</h2>
-          <p>
-            Chaque voiture « voit » la piste avec 5 capteurs de distance et connaît sa vitesse. Un
-            petit réseau de neurones transforme ces 6 nombres en deux décisions : tourner et
-            accélérer. À la fin de chaque promotion, les meilleurs élèves ont des « enfants » :
-            copies mélangées de leurs réseaux, avec quelques mutations aléatoires. Les maladroits
-            sortent de la route, les bons transmettent leur conduite — c’est la neuroévolution.
-          </p>
-        </div>
       </section>
+
+      <details class="about">
+        <summary>Comment ça marche&nbsp;?</summary>
+        <p>
+          Chaque voiture « voit » la piste avec 5 capteurs de distance et connaît sa vitesse. Un
+          petit réseau de neurones transforme ces 6 nombres en deux décisions : tourner et
+          accélérer. À la fin de chaque promotion, les meilleurs élèves ont des « enfants » : copies
+          mélangées de leurs réseaux, avec quelques mutations aléatoires. Les maladroits sortent de
+          la route, les bons transmettent leur conduite — c’est la neuroévolution.
+        </p>
+      </details>
     </main>
     <footer>
       <!-- RÈGLE PORTFOLIO — ce lien de retour est obligatoire dans la

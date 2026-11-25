@@ -173,7 +173,8 @@ function doStep() {
 
 function setRunning(value) {
   running = value;
-  playBtn.setAttribute('aria-pressed', String(running));
+  // The button shows the action it triggers; the label alone carries the
+  // state, so no aria-pressed here (demo charter).
   playBtn.textContent = running ? 'Pause' : 'Lecture';
 }
 

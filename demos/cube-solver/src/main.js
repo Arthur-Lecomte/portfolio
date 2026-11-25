@@ -14,432 +14,437 @@ import { createCubeView } from './render/cubeView.js';
 import { createSolver } from './solver/client.js';
 
 // RÈGLE PORTFOLIO — clés localStorage préfixées par le slug du projet.
-const CLE_ETAT = 'cube-solver:state';
-const CLE_VITESSE = 'cube-solver:speed';
+const STATE_KEY = 'cube-solver:state';
+const SPEED_KEY = 'cube-solver:speed';
 
-const VITESSE_DEFAUT = 220; // ms par quart de tour
-const VITESSE_MIN = 80; // rapide
-const VITESSE_MAX = 600; // lent
+const SPEED_DEFAULT = 220; // ms par quart de tour
+const SPEED_MIN = 80; // rapide
+const SPEED_MAX = 600; // lent
 
 // --- Éléments de l'interface ----------------------------------------------
 
-const statutEl = document.getElementById('statut');
-const btnMelanger = document.getElementById('btn-melanger');
-const btnResoudre = document.getElementById('btn-resoudre');
-const btnReinitialiser = document.getElementById('btn-reinitialiser');
-const curseurVitesse = document.getElementById('curseur-vitesse');
-const panneauSolution = document.getElementById('panneau-solution');
-const solutionTitre = document.getElementById('solution-titre');
-const solutionListe = document.getElementById('solution-liste');
-const btnPrecedent = document.getElementById('btn-precedent');
-const btnLecture = document.getElementById('btn-lecture');
-const btnSuivant = document.getElementById('btn-suivant');
-const boutonsCoups = [...document.querySelectorAll('.grille-coups [data-move]')];
+const statusEl = document.getElementById('status');
+const scrambleBtn = document.getElementById('btn-scramble');
+const solveBtn = document.getElementById('btn-solve');
+const resetBtn = document.getElementById('btn-reset');
+const speedSlider = document.getElementById('speed-slider');
+const solutionPanel = document.getElementById('solution-panel');
+const solutionTitle = document.getElementById('solution-title');
+const solutionList = document.getElementById('solution-list');
+const prevBtn = document.getElementById('btn-prev');
+const playBtn = document.getElementById('btn-play');
+const nextBtn = document.getElementById('btn-next');
+const moveButtons = [...document.querySelectorAll('.moves-grid [data-move]')];
 
-function setStatut(texte) {
-  statutEl.textContent = texte;
+function setStatus(text) {
+  statusEl.textContent = text;
 }
 
-const libelleCoups = (n) => `${n} ${n > 1 ? 'coups' : 'coup'}`;
+const moveCountLabel = (n) => `${n} ${n > 1 ? 'coups' : 'coup'}`;
 
 // --- État logique et persistance -------------------------------------------
 
 // localStorage peut lever : SecurityError si le stockage est bloqué
 // (cookies interdits, iframe sandbox), QuotaExceededError s'il est plein.
 // La démo doit fonctionner sans sauvegarde plutôt que mourir.
-function lireStockage(cle) {
+function readStorage(key) {
   try {
-    return localStorage.getItem(cle);
+    return localStorage.getItem(key);
   } catch {
     return null;
   }
 }
 
-function ecrireStockage(cle, valeur) {
+function writeStorage(key, value) {
   try {
-    localStorage.setItem(cle, valeur);
+    localStorage.setItem(key, value);
   } catch {
     /* stockage indisponible : on continue sans persistance */
   }
 }
 
-const etatSauvegarde = lireStockage(CLE_ETAT);
-let etat = isStructurallyValid(etatSauvegarde) ? etatSauvegarde : SOLVED;
+const savedState = readStorage(STATE_KEY);
+let state = isStructurallyValid(savedState) ? savedState : SOLVED;
 
-let vitesse = Number(lireStockage(CLE_VITESSE));
-if (!Number.isFinite(vitesse) || vitesse < VITESSE_MIN || vitesse > VITESSE_MAX) {
-  vitesse = VITESSE_DEFAUT;
+let speed = Number(readStorage(SPEED_KEY));
+if (!Number.isFinite(speed) || speed < SPEED_MIN || speed > SPEED_MAX) {
+  speed = SPEED_DEFAULT;
 }
 
-function persister() {
-  ecrireStockage(CLE_ETAT, etat);
+function persist() {
+  writeStorage(STATE_KEY, state);
 }
 
 // Chaque coup committé (drag utilisateur ou file d'animation) est appliqué
 // à l'état logique puis persisté : la géométrie 3D et l'état restent
 // toujours synchronisés.
-function coupCommis(move) {
-  etat = applyMove(etat, move);
-  persister();
+function commitMove(move) {
+  state = applyMove(state, move);
+  persist();
 }
 
 // --- Modes et verrouillage --------------------------------------------------
 
-// 'libre' : interactions normales ; 'melange' : lot de mélange en cours ;
+// 'free' : interactions normales ; 'scramble' : lot de mélange en cours ;
 // 'solution' : panneau solution actif (lecture ou navigation pas-à-pas).
-let mode = 'libre';
-let lecture = false; // lecture automatique de la solution
-let lectureTerminee = false; // la lecture a atteint la fin au moins une fois
-let rechercheEnCours = false;
-let solveurPret = false;
+let mode = 'free';
+let playing = false; // lecture automatique de la solution
+let playbackDone = false; // la lecture a atteint la fin au moins une fois
+let searching = false;
+let solverReady = false;
 let solution = [];
-let curseur = 0; // nombre de coups de la solution actuellement appliqués
-let enVol = 0; // coups de solution enfilés mais pas encore committés
+let cursor = 0; // nombre de coups de la solution actuellement appliqués
+let inFlight = 0; // coups de solution enfilés mais pas encore committés
 let session = 0; // invalide les réponses du solveur après Réinitialiser
-let boutonPasActif = null; // dernier bouton ⏮/⏭ activé (restauration du focus)
+let activeStepBtn = null; // dernier bouton ⏮/⏭ activé (restauration du focus)
 
-function estVerrouille() {
-  return mode === 'melange' || rechercheEnCours || (mode === 'solution' && !lectureTerminee);
+function isLocked() {
+  return mode === 'scramble' || searching || (mode === 'solution' && !playbackDone);
 }
 
-function majControles() {
-  const verrou = estVerrouille();
+function updateControls() {
+  const locked = isLocked();
   // Tant qu'un coup est en vol (file, animation, drag ou recalage), l'état
   // logique peut encore bouger : Mélanger et Résoudre attendent.
-  const occupe = vue.estOccupee();
-  btnMelanger.disabled = verrou || occupe;
-  btnResoudre.disabled = verrou || occupe || !solveurPret || mode === 'solution';
-  for (const bouton of boutonsCoups) bouton.disabled = verrou;
-  vue.setDragEnabled(!verrou);
+  const busy = view.isBusy();
+  scrambleBtn.disabled = locked || busy;
+  solveBtn.disabled = locked || busy || !solverReady || mode === 'solution';
+  for (const button of moveButtons) button.disabled = locked;
+  view.setDragEnabled(!locked);
 
-  const enSolution = mode === 'solution';
-  btnLecture.disabled = !enSolution;
-  btnPrecedent.disabled = !enSolution || lecture || enVol > 0 || curseur === 0;
-  btnSuivant.disabled = !enSolution || lecture || enVol > 0 || curseur >= solution.length;
+  const inSolution = mode === 'solution';
+  playBtn.disabled = !inSolution;
+  // Charte : le bouton affiche l'action qu'il déclenche (Lecture / Pause).
+  playBtn.textContent = playing ? 'Pause' : 'Lecture';
+  prevBtn.disabled = !inSolution || playing || inFlight > 0 || cursor === 0;
+  nextBtn.disabled = !inSolution || playing || inFlight > 0 || cursor >= solution.length;
 }
 
 // Désactiver ⏮/⏭ pendant l'animation fait tomber le focus clavier sur
 // <body> : on le rend au bouton (ou à son jumeau en bout de course) pour
 // que la navigation pas-à-pas reste utilisable au clavier.
-function restaurerFocusPas() {
-  if (!boutonPasActif || document.activeElement !== document.body) return;
-  const jumeau = boutonPasActif === btnSuivant ? btnPrecedent : btnSuivant;
-  const cible = boutonPasActif.disabled ? jumeau : boutonPasActif;
-  if (!cible.disabled) cible.focus();
+function restoreStepFocus() {
+  if (!activeStepBtn || document.activeElement !== document.body) return;
+  const twin = activeStepBtn === nextBtn ? prevBtn : nextBtn;
+  const target = activeStepBtn.disabled ? twin : activeStepBtn;
+  if (!target.disabled) target.focus();
 }
 
 // --- Panneau solution --------------------------------------------------------
 
-function afficherSolution() {
-  solutionTitre.textContent = `Solution : ${libelleCoups(solution.length)}`;
-  solutionListe.textContent = '';
+function showSolution() {
+  solutionTitle.textContent = `Solution : ${moveCountLabel(solution.length)}`;
+  solutionList.textContent = '';
   for (const move of solution) {
-    const puce = document.createElement('li');
-    puce.textContent = move;
-    solutionListe.appendChild(puce);
+    const chip = document.createElement('li');
+    chip.textContent = move;
+    solutionList.appendChild(chip);
   }
-  panneauSolution.hidden = false;
+  solutionPanel.hidden = false;
 }
 
-function cacherSolution() {
-  panneauSolution.hidden = true;
-  solutionListe.textContent = '';
+function hideSolution() {
+  solutionPanel.hidden = true;
+  solutionList.textContent = '';
 }
 
 // Surligne le coup courant et le garde visible (auto-scroll).
-function surligner(index) {
-  const puces = solutionListe.children;
-  for (const puce of puces) puce.classList.remove('courant');
-  const puce = puces[index];
-  if (puce) {
-    puce.classList.add('courant');
+function highlight(index) {
+  const chips = solutionList.children;
+  for (const chip of chips) chip.classList.remove('current');
+  const chip = chips[index];
+  if (chip) {
+    chip.classList.add('current');
     // behavior:'smooth' en JS outrepasserait la CSS : on respecte ici même
     // la préférence « réduire les animations ».
-    const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    puce.scrollIntoView({ block: 'nearest', behavior: reduit ? 'auto' : 'smooth' });
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    chip.scrollIntoView({
+      block: 'nearest',
+      behavior: reduced ? 'auto' : 'smooth',
+    });
   }
 }
 
 // Sort du mode solution (le panneau devient obsolète après un coup libre).
-function quitterSolution() {
+function exitSolution() {
   if (mode !== 'solution') return;
-  mode = 'libre';
-  lecture = false;
-  boutonPasActif = null;
-  cacherSolution();
-  majControles();
+  mode = 'free';
+  playing = false;
+  activeStepBtn = null;
+  hideSolution();
+  updateControls();
 }
 
 // Enfile le prochain coup de la solution si la lecture est active.
-function pomper() {
-  if (mode !== 'solution' || !lecture || enVol > 0) return;
-  if (curseur >= solution.length) return;
-  enVol++;
-  vue.enqueue([solution[curseur]], 'solution');
+function pump() {
+  if (mode !== 'solution' || !playing || inFlight > 0) return;
+  if (cursor >= solution.length) return;
+  inFlight++;
+  view.enqueue([solution[cursor]], 'solution');
 }
 
 // --- Vue 3D ------------------------------------------------------------------
 
-const callbacksVue = {
+const viewCallbacks = {
   // Geste de drag utilisateur committé : la géométrie est déjà figée.
   onUserMove(move) {
-    coupCommis(move);
-    quitterSolution();
-    majControles();
+    commitMove(move);
+    exitSolution();
+    updateControls();
   },
 
   onMoveStart(move, meta) {
-    if (meta === 'solution') surligner(curseur);
-    else if (meta === 'solution-retour') surligner(curseur - 1);
+    if (meta === 'solution') highlight(cursor);
+    else if (meta === 'solution-back') highlight(cursor - 1);
   },
 
   onMoveCommitted(move, meta) {
-    coupCommis(move);
-    if (meta === 'solution' || meta === 'solution-retour') {
-      enVol = Math.max(0, enVol - 1);
+    commitMove(move);
+    if (meta === 'solution' || meta === 'solution-back') {
+      inFlight = Math.max(0, inFlight - 1);
     }
     if (mode === 'solution') {
       if (meta === 'solution') {
-        curseur++;
-        if (curseur >= solution.length) {
-          lecture = false;
-          lectureTerminee = true;
-          surligner(solution.length - 1);
+        cursor++;
+        if (cursor >= solution.length) {
+          playing = false;
+          playbackDone = true;
+          highlight(solution.length - 1);
           // Ceinture et bretelles : ne crier victoire que si c'est vrai.
-          setStatut(
-            isSolved(etat)
-              ? `Résolu en ${libelleCoups(solution.length)} ✓`
+          setStatus(
+            isSolved(state)
+              ? `Résolu en ${moveCountLabel(solution.length)} ✓`
               : 'Lecture terminée — le cube a bougé entre-temps.',
           );
-        } else if (lecture) {
-          pomper();
+        } else if (playing) {
+          pump();
         } else {
-          surligner(curseur);
+          highlight(cursor);
         }
-        majControles();
-        restaurerFocusPas();
-      } else if (meta === 'solution-retour') {
-        curseur--;
-        surligner(curseur);
-        // Si ⏯ a été pressé pendant que ce coup retour était en vol, la
-        // lecture est active mais rien n'a pu être pompé (enVol > 0) :
+        updateControls();
+        restoreStepFocus();
+      } else if (meta === 'solution-back') {
+        cursor--;
+        highlight(cursor);
+        // Si Lecture a été pressé pendant que ce coup retour était en vol,
+        // la lecture est active mais rien n'a pu être pompé (inFlight > 0) :
         // on relance ici, sinon elle resterait figée à jamais.
-        if (lecture) pomper();
-        majControles();
-        restaurerFocusPas();
-      } else if (meta === 'manuel' || meta === 'melange') {
+        if (playing) pump();
+        updateControls();
+        restoreStepFocus();
+      } else if (meta === 'manual' || meta === 'scramble') {
         // Un coup hors solution rend le panneau obsolète.
-        quitterSolution();
+        exitSolution();
       }
     }
   },
 
   onQueueEmpty() {
-    if (mode === 'melange') {
-      mode = 'libre';
-      vue.setSpeed(vitesse);
-      setStatut('Cube mélangé — à vous de jouer !');
+    if (mode === 'scramble') {
+      mode = 'free';
+      view.setSpeed(speed);
+      setStatus('Cube mélangé — à vous de jouer !');
     }
-    majControles(); // réactive Mélanger/Résoudre une fois la file épuisée
+    updateControls(); // réactive Mélanger/Résoudre une fois la file épuisée
   },
 };
 
 // WebGL peut manquer (accélération coupée, VM, pilote sur liste noire) :
 // plutôt qu'une exception brute et un « Chargement… » éternel, on informe
 // et on neutralise l'interface.
-let vue;
+let view;
 try {
-  vue = createCubeView(document.getElementById('scene'), callbacksVue);
-} catch (erreur) {
-  setStatut('Affichage 3D indisponible sur cet appareil (WebGL requis).');
-  const controles = [
-    btnMelanger,
-    btnResoudre,
-    btnReinitialiser,
-    btnLecture,
-    btnPrecedent,
-    btnSuivant,
-    curseurVitesse,
-    ...boutonsCoups,
+  view = createCubeView(document.getElementById('scene'), viewCallbacks);
+} catch (error) {
+  setStatus('Affichage 3D indisponible sur cet appareil (WebGL requis).');
+  const controls = [
+    scrambleBtn,
+    solveBtn,
+    resetBtn,
+    playBtn,
+    prevBtn,
+    nextBtn,
+    speedSlider,
+    ...moveButtons,
   ];
-  for (const controle of controles) controle.disabled = true;
-  throw erreur; // stoppe le reste du module ; la page reste informative
+  for (const control of controls) control.disabled = true;
+  throw error; // stoppe le reste du module ; la page reste informative
 }
 
-vue.setSpeed(vitesse);
+view.setSpeed(speed);
 // Restaure la position sauvegardée (géométrie remise à l'identité + stickers).
-vue.setFacelets(etat);
+view.setFacelets(state);
 
 // --- Solveur (Web Worker) ----------------------------------------------------
 
-const solveur = createSolver();
-setStatut('Préparation du solveur…');
-solveur.ready
+const solver = createSolver();
+setStatus('Préparation du solveur…');
+solver.ready
   .then(() => {
-    solveurPret = true;
-    setStatut('Solveur prêt. À vous de jouer !');
-    majControles();
+    solverReady = true;
+    setStatus('Solveur prêt. À vous de jouer !');
+    updateControls();
   })
-  .catch((erreur) => {
-    setStatut(erreur?.message || 'Solveur indisponible.');
+  .catch((error) => {
+    setStatus(error?.message || 'Solveur indisponible.');
   });
 
 // --- Actions -----------------------------------------------------------------
 
-btnMelanger.addEventListener('click', () => {
-  if (estVerrouille()) return;
-  quitterSolution();
-  mode = 'melange';
-  majControles();
-  setStatut('Mélange en cours…');
+scrambleBtn.addEventListener('click', () => {
+  if (isLocked()) return;
+  exitSolution();
+  mode = 'scramble';
+  updateControls();
+  setStatus('Mélange en cours…');
   // Lot de mélange accéléré, la vitesse utilisateur revient à la fin.
-  vue.setSpeed(Math.min(vitesse, 120));
-  vue.enqueue(randomScramble(25), 'melange');
+  view.setSpeed(Math.min(speed, 120));
+  view.enqueue(randomScramble(25), 'scramble');
 });
 
-btnResoudre.addEventListener('click', () => {
-  if (estVerrouille() || !solveurPret || mode === 'solution') return;
-  if (vue.estOccupee()) return; // un coup est encore en vol (garde anti-course)
-  if (isSolved(etat)) {
-    setStatut('Déjà résolu !');
+solveBtn.addEventListener('click', () => {
+  if (isLocked() || !solverReady || mode === 'solution') return;
+  if (view.isBusy()) return; // un coup est encore en vol (garde anti-course)
+  if (isSolved(state)) {
+    setStatus('Déjà résolu !');
     return;
   }
-  rechercheEnCours = true;
-  majControles(); // coupe le drag : un recalage en vol se committe ici même
-  setStatut('Recherche de la solution…');
-  const maSession = session;
-  const etatEnvoye = etat; // photographie APRÈS la purge du drag
-  solveur
-    .solve(etatEnvoye)
-    .then((coups) => {
-      if (maSession !== session) return; // réinitialisé entre-temps
-      rechercheEnCours = false;
-      if (etat !== etatEnvoye) {
+  searching = true;
+  updateControls(); // coupe le drag : un recalage en vol se committe ici même
+  setStatus('Recherche de la solution…');
+  const mySession = session;
+  const sentState = state; // photographie APRÈS la purge du drag
+  solver
+    .solve(sentState)
+    .then((moves) => {
+      if (mySession !== session) return; // réinitialisé entre-temps
+      searching = false;
+      if (state !== sentState) {
         // Un coup s'est committé pendant la recherche : solution périmée.
-        setStatut('Le cube a bougé pendant la recherche — réessayez.');
-        majControles();
+        setStatus('Le cube a bougé pendant la recherche — réessayez.');
+        updateControls();
         return;
       }
-      if (coups.length === 0) {
-        setStatut('Déjà résolu !');
-        majControles();
+      if (moves.length === 0) {
+        setStatus('Déjà résolu !');
+        updateControls();
         return;
       }
-      solution = coups;
-      curseur = 0;
-      enVol = 0;
-      lecture = true;
-      lectureTerminee = false;
+      solution = moves;
+      cursor = 0;
+      inFlight = 0;
+      playing = true;
+      playbackDone = false;
       mode = 'solution';
-      afficherSolution();
-      surligner(0);
-      vue.setSpeed(vitesse);
-      setStatut(`Solution : ${libelleCoups(coups.length)} — lecture…`);
-      majControles();
-      pomper();
+      showSolution();
+      highlight(0);
+      view.setSpeed(speed);
+      setStatus(`Solution : ${moveCountLabel(moves.length)} — lecture…`);
+      updateControls();
+      pump();
     })
-    .catch((erreur) => {
-      if (maSession !== session) return;
-      rechercheEnCours = false;
-      setStatut(erreur?.message || 'Résolution impossible.');
-      majControles();
+    .catch((error) => {
+      if (mySession !== session) return;
+      searching = false;
+      setStatus(error?.message || 'Résolution impossible.');
+      updateControls();
     });
 });
 
 // Réinitialiser : toujours actif, interrompt tout proprement.
-btnReinitialiser.addEventListener('click', () => {
+resetBtn.addEventListener('click', () => {
   session++;
-  mode = 'libre';
-  lecture = false;
-  lectureTerminee = false;
-  rechercheEnCours = false;
+  mode = 'free';
+  playing = false;
+  playbackDone = false;
+  searching = false;
   solution = [];
-  curseur = 0;
-  enVol = 0;
-  boutonPasActif = null;
-  cacherSolution();
-  vue.clearQueue(); // termine proprement le coup en cours
-  vue.setFacelets(SOLVED);
-  etat = SOLVED;
-  persister();
-  vue.setSpeed(vitesse);
-  majControles();
-  setStatut('Cube réinitialisé.');
+  cursor = 0;
+  inFlight = 0;
+  activeStepBtn = null;
+  hideSolution();
+  view.clearQueue(); // termine proprement le coup en cours
+  view.setFacelets(SOLVED);
+  state = SOLVED;
+  persist();
+  view.setSpeed(speed);
+  updateControls();
+  setStatus('Cube réinitialisé.');
 });
 
 // --- Lecture de la solution ---------------------------------------------------
 
-btnLecture.addEventListener('click', () => {
+playBtn.addEventListener('click', () => {
   if (mode !== 'solution') return;
-  if (lecture) {
-    lecture = false;
-    setStatut('Lecture en pause — naviguez coup par coup.');
-  } else if (curseur < solution.length) {
-    lecture = true;
-    // Une relecture (après ⏮ en fin de lecture) redevient une lecture
-    // active à part entière : les entrées doivent se reverrouiller.
-    lectureTerminee = false;
-    setStatut('Lecture de la solution…');
-    pomper();
+  if (playing) {
+    playing = false;
+    setStatus('Lecture en pause — naviguez coup par coup.');
+  } else if (cursor < solution.length) {
+    playing = true;
+    // Une relecture (après Précédent en fin de lecture) redevient une
+    // lecture active à part entière : les entrées doivent se reverrouiller.
+    playbackDone = false;
+    setStatus('Lecture de la solution…');
+    pump();
   }
-  majControles();
+  updateControls();
 });
 
-btnSuivant.addEventListener('click', () => {
-  if (mode !== 'solution' || lecture || enVol > 0) return;
-  if (curseur >= solution.length) return;
-  boutonPasActif = btnSuivant;
-  enVol++;
-  vue.enqueue([solution[curseur]], 'solution');
-  majControles();
+nextBtn.addEventListener('click', () => {
+  if (mode !== 'solution' || playing || inFlight > 0) return;
+  if (cursor >= solution.length) return;
+  activeStepBtn = nextBtn;
+  inFlight++;
+  view.enqueue([solution[cursor]], 'solution');
+  updateControls();
 });
 
 // Rejoue le coup précédent à l'envers, géométriquement et logiquement.
-btnPrecedent.addEventListener('click', () => {
-  if (mode !== 'solution' || lecture || enVol > 0) return;
-  if (curseur === 0) return;
-  boutonPasActif = btnPrecedent;
-  enVol++;
-  vue.enqueue([invertMove(solution[curseur - 1])], 'solution-retour');
-  majControles();
+prevBtn.addEventListener('click', () => {
+  if (mode !== 'solution' || playing || inFlight > 0) return;
+  if (cursor === 0) return;
+  activeStepBtn = prevBtn;
+  inFlight++;
+  view.enqueue([invertMove(solution[cursor - 1])], 'solution-back');
+  updateControls();
 });
 
 // --- Coups manuels (boutons + clavier) ----------------------------------------
 
-for (const bouton of boutonsCoups) {
-  bouton.addEventListener('click', () => {
-    if (estVerrouille()) return;
-    vue.enqueue([bouton.dataset.move], 'manuel');
-    majControles(); // gèle Mélanger/Résoudre le temps de l'animation
+for (const button of moveButtons) {
+  button.addEventListener('click', () => {
+    if (isLocked()) return;
+    view.enqueue([button.dataset.move], 'manual');
+    updateControls(); // gèle Mélanger/Résoudre le temps de l'animation
   });
 }
 
-const FACES_CLAVIER = { u: 'U', d: 'D', l: 'L', r: 'R', f: 'F', b: 'B' };
+const KEYBOARD_FACES = { u: 'U', d: 'D', l: 'L', r: 'R', f: 'F', b: 'B' };
 document.addEventListener('keydown', (e) => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
-  const cible = e.target;
+  const target = e.target;
   if (
-    cible instanceof HTMLElement &&
-    (cible.matches('input, textarea, select') || cible.isContentEditable)
+    target instanceof HTMLElement &&
+    (target.matches('input, textarea, select') || target.isContentEditable)
   ) {
     return;
   }
-  const face = FACES_CLAVIER[e.key.toLowerCase()];
+  const face = KEYBOARD_FACES[e.key.toLowerCase()];
   if (!face) return;
-  if (estVerrouille()) return;
-  vue.enqueue([face + (e.shiftKey ? "'" : '')], 'manuel');
-  majControles(); // gèle Mélanger/Résoudre le temps de l'animation
+  if (isLocked()) return;
+  view.enqueue([face + (e.shiftKey ? "'" : '')], 'manual');
+  updateControls(); // gèle Mélanger/Résoudre le temps de l'animation
   e.preventDefault();
 });
 
 // --- Curseur de vitesse --------------------------------------------------------
 
 // Le curseur affiche « lent -> rapide » : valeur = 680 - durée (ms).
-curseurVitesse.value = String(VITESSE_MIN + VITESSE_MAX - vitesse);
-curseurVitesse.addEventListener('input', () => {
-  vitesse = VITESSE_MIN + VITESSE_MAX - Number(curseurVitesse.value);
-  ecrireStockage(CLE_VITESSE, String(vitesse));
-  vue.setSpeed(mode === 'melange' ? Math.min(vitesse, 120) : vitesse);
+speedSlider.value = String(SPEED_MIN + SPEED_MAX - speed);
+speedSlider.addEventListener('input', () => {
+  speed = SPEED_MIN + SPEED_MAX - Number(speedSlider.value);
+  writeStorage(SPEED_KEY, String(speed));
+  view.setSpeed(mode === 'scramble' ? Math.min(speed, 120) : speed);
 });
 
-majControles();
+updateControls();

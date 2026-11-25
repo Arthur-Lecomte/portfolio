@@ -389,8 +389,8 @@ function setRunning(on) {
     lastNow = performance.now();
     scheduleRender();
   }
-  toggleBtn.textContent = on ? 'Pause' : 'Lancer';
-  toggleBtn.setAttribute('aria-pressed', String(on));
+  // Charter: the alternating label carries the state — no aria-pressed.
+  toggleBtn.textContent = on ? 'Pause' : 'Lecture';
 }
 
 // ------------------------------------------------------------ interaction
@@ -435,7 +435,7 @@ sceneEl.addEventListener('pointerdown', (e) => {
   base.th1 = hit.p.s[0];
   base.th2 = hit.p.s[2];
   running = false;
-  toggleBtn.textContent = 'Lancer';
+  toggleBtn.textContent = 'Lecture';
   applyDrag(e);
 });
 
@@ -497,7 +497,7 @@ sceneEl.addEventListener('keydown', (e) => {
   }
   e.preventDefault();
   running = false;
-  toggleBtn.textContent = 'Lancer';
+  toggleBtn.textContent = 'Lecture';
   resetRun();
   scheduleRender();
 });

@@ -1,16 +1,27 @@
-/* Auto-École — dark techy theme. System fonts only (no external requests). */
+/* Auto-École — dark theme on the shared demo charter tokens.
+   System fonts only (no external requests). */
 
 :root {
-  --bg: #0e1218;
-  --bg-raised: #151b24;
-  --bg-inset: #0a0e13;
-  --border: #2a3442;
-  --text: #e4ebf3;
-  --text-dim: #9aa8b8;
-  --accent: #52d6fb;
-  --accent-dim: #2a7c96;
-  --gold: #ffd166;
-  --radius: 10px;
+  color-scheme: dark;
+
+  /* Charter tokens — same names and values as the portfolio dark mode. */
+  --color-bg: #101216;
+  --color-text: #e8eaee;
+  --color-muted: #9aa0ab;
+  --color-surface: #181b21;
+  --color-border: #2a2e36;
+  --color-accent: #8ab0ff;
+  --color-accent-contrast: #0c1f4d;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+
+  /* Local shades derived from the tokens. */
+  --surface-inset: color-mix(in srgb, var(--color-bg) 72%, black);
+  --surface-veil: color-mix(in srgb, var(--color-bg) 86%, transparent);
+  --accent-tint: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+
+  /* Scene colors — the demo's identity, free from the charter. */
+  --scene-gold: #ffd166;
 }
 
 /* Author styles on elements like .overlay would otherwise beat the UA's
@@ -30,13 +41,18 @@ body {
 }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.45;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .app {
@@ -55,15 +71,9 @@ h1 {
   letter-spacing: 0.04em;
 }
 
-h1::after {
-  /* Decorative: the empty alternative text keeps it out of the h1's
-     accessible name. */
-  content: ' 🚗' / '';
-}
-
 .tagline {
   margin: 0.4rem 0 0;
-  color: var(--text-dim);
+  color: var(--color-muted);
   max-width: 62ch;
 }
 
@@ -77,7 +87,7 @@ h2 {
   display: block;
   font-size: 0.78rem;
   font-weight: normal;
-  color: var(--text-dim);
+  color: var(--color-muted);
 }
 
 /* ---- Layout ---- */
@@ -91,9 +101,9 @@ h2 {
 
 .stage {
   position: relative;
-  background: var(--bg-inset);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--surface-inset);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   overflow: hidden;
   aspect-ratio: 3 / 2;
 }
@@ -113,7 +123,7 @@ h2 {
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
-  background: rgba(10, 14, 19, 0.82);
+  background: var(--surface-veil);
   text-align: center;
   padding: 1rem;
 }
@@ -136,11 +146,11 @@ h2 {
   transform: translateX(-50%);
   margin: 0;
   padding: 0.3rem 0.8rem;
-  background: rgba(10, 14, 19, 0.88);
-  border: 1px solid var(--border);
+  background: var(--surface-veil);
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   font-size: 0.85rem;
-  color: var(--text);
+  color: var(--color-text);
   pointer-events: none;
   max-width: calc(100% - 1.5rem);
   text-align: center;
@@ -169,15 +179,15 @@ h2 {
 }
 
 .stat {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.5rem 0.7rem;
 }
 
 .stat dt {
   font-size: 0.82rem;
-  color: var(--text-dim);
+  color: var(--color-muted);
 }
 
 .stat dt .sub {
@@ -192,14 +202,15 @@ h2 {
 }
 
 #stat-record {
-  color: var(--gold);
+  /* Echoes the gold "best" color drawn in the scene and the chart. */
+  color: var(--scene-gold);
 }
 
 .controls,
 .tracks {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.8rem;
   display: flex;
   flex-direction: column;
@@ -214,28 +225,23 @@ h2 {
 
 button {
   font: inherit;
-  color: var(--text);
-  background: var(--bg-inset);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 0.45rem 0.8rem;
+  min-height: 44px;
   cursor: pointer;
 }
 
 button:hover {
-  border-color: var(--accent-dim);
+  border-color: var(--color-muted);
 }
 
 button.primary {
-  border-color: var(--accent-dim);
-  background: #12222c;
-}
-
-button:focus-visible,
-input:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
 button[disabled] {
@@ -252,15 +258,15 @@ button[disabled] {
 
 .speed legend {
   font-size: 0.82rem;
-  color: var(--text-dim);
+  color: var(--color-muted);
   padding: 0;
   margin-bottom: 0.3rem;
 }
 
 .segmented {
   display: flex;
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   overflow: hidden;
   width: fit-content;
 }
@@ -272,11 +278,14 @@ button[disabled] {
 }
 
 .segmented label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 0.3rem 0.85rem;
   cursor: pointer;
   font-size: 0.9rem;
-  color: var(--text-dim);
-  border-right: 1px solid var(--border);
+  color: var(--color-muted);
+  border-right: 1px solid var(--color-border);
 }
 
 .segmented label:last-of-type {
@@ -284,12 +293,14 @@ button[disabled] {
 }
 
 .segmented input:checked + label {
-  background: var(--accent-dim);
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
 }
 
+/* The radios are visually hidden, so the universal :focus-visible rule
+   cannot reach them: the ring goes on the visible label instead. */
 .segmented input:focus-visible + label {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: -2px;
 }
 
@@ -303,12 +314,13 @@ button[disabled] {
 
 .slider > span {
   grid-column: 1 / -1;
-  color: var(--text-dim);
+  color: var(--color-muted);
 }
 
 .slider input {
   width: 100%;
-  accent-color: var(--accent);
+  min-height: 44px;
+  accent-color: var(--color-accent);
 }
 
 .slider output {
@@ -334,25 +346,26 @@ button[disabled] {
   flex: 1;
   text-align: left;
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
 }
 
 .track-item .difficulty {
-  color: var(--text-dim);
+  color: var(--color-muted);
   font-size: 0.8rem;
   align-self: center;
 }
 
 .track-item[data-current='true'] > button.select {
-  border-color: var(--accent);
-  background: #12222c;
+  border-color: var(--color-accent);
+  background: var(--accent-tint);
 }
 
 /* Non-color cue for the selected track (WCAG 1.4.1). */
 .track-item[data-current='true'] > button.select > span:first-child::before {
   content: '✓ ' / '';
-  color: var(--accent);
+  color: var(--color-accent);
   font-weight: 700;
 }
 
@@ -370,9 +383,9 @@ button[disabled] {
 }
 
 .panel {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.8rem;
 }
 
@@ -384,14 +397,30 @@ button[disabled] {
   display: block;
   width: 100%;
   height: 210px;
-  background: var(--bg-inset);
-  border-radius: 6px;
+  background: var(--surface-inset);
+  border-radius: var(--radius-sm);
 }
 
-.panel-text p {
-  margin: 0;
+/* ---- Help ---- */
+
+.about {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.8rem;
+  margin: 0 0 1rem;
+}
+
+.about summary {
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.about p {
+  margin: 0.6rem 0 0;
   font-size: 0.9rem;
-  color: var(--text-dim);
+  color: var(--color-muted);
+  max-width: 72ch;
 }
 
 /* ---- Footer ---- */
@@ -401,10 +430,11 @@ footer {
   margin: 0 auto;
   padding: 1rem 0 1.4rem;
   font-size: 0.9rem;
+  text-align: center;
 }
 
 footer a {
-  color: var(--accent);
+  color: var(--color-muted);
 }
 
 /* ---- Responsive ---- */

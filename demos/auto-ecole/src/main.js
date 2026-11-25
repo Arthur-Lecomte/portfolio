@@ -203,7 +203,7 @@ function render() {
     const laps = Math.floor(ch.car.progressIdx / state.track.n);
     if (laps !== ch.laps) {
       ch.laps = laps;
-      showPill(`🏆 Le champion roule — ${laps} tour${laps > 1 ? 's' : ''}`);
+      showPill(`Le champion roule — ${laps} tour${laps > 1 ? 's' : ''}`);
     }
     setStat('alive', '1');
     setStat('best', meters(ch.car.progressDist));
@@ -240,7 +240,8 @@ function setRunning(run) {
   if (run && !state.running) lastTime = 0;
   state.running = run;
   if (run) els.overlay.hidden = true; // whatever started the sim dismisses the start gate
-  els.play.textContent = run ? '⏸ Pause' : '▶ Reprendre';
+  // Charter labels: the button shows the action it triggers.
+  els.play.textContent = run ? 'Pause' : 'Lecture';
   if (run) {
     state.userStarted = true;
     schedule();
@@ -252,14 +253,14 @@ function setRunning(run) {
 function updateChampionButton() {
   if (state.mode === 'champion') {
     els.champion.disabled = false;
-    els.champion.textContent = '🏫 Retour à l’école';
+    els.champion.textContent = 'Retour à l’école';
     els.champion.title = '';
     els.championHint.hidden = true;
     return;
   }
   const has = Boolean(CHAMPIONS[state.trackDef.id]);
   els.champion.disabled = !has;
-  els.champion.textContent = '🏆 Voir le champion';
+  els.champion.textContent = 'Voir le champion';
   els.champion.title = has ? 'Faire rouler un réseau déjà entraîné (embarqué dans la démo)' : '';
   // Visible text, not a tooltip: a disabled button is unfocusable, so the
   // explanation must not live only in `title`.
@@ -307,12 +308,12 @@ function enterEditor() {
   state.mode = 'editor';
   state.running = false;
   els.overlay.hidden = true; // the reduced-motion start gate must not cover the editor
-  els.play.textContent = '▶ Reprendre';
+  els.play.textContent = 'Lecture';
   state.sim.spawn(); // mid-generation state would be stale when we return
   editor.enter();
   renderer.setWorldView(editor.worldBounds());
   sceneCanvas.setAttribute('aria-label', 'Zone de dessin : tracez votre circuit à main levée');
-  els.draw.textContent = '✖ Annuler le tracé';
+  els.draw.textContent = 'Annuler le tracé';
   els.play.disabled = true;
   els.restart.disabled = true;
   els.champion.disabled = true;
@@ -327,7 +328,7 @@ function exitEditor(restore) {
     'aria-label',
     'Vue de la piste : les voitures de la promotion en cours d’entraînement',
   );
-  els.draw.textContent = '✏️ Tracer mon circuit';
+  els.draw.textContent = 'Tracer mon circuit';
   els.play.disabled = false;
   els.restart.disabled = false;
   state.mode = 'train';
@@ -397,7 +398,8 @@ function renderTrackList() {
       del.type = 'button';
       del.className = 'delete';
       del.dataset.delete = def.id;
-      del.textContent = '🗑';
+      // Meaningful symbol (not an emoji); the aria-label below names it.
+      del.textContent = '✕';
       del.setAttribute('aria-label', `Supprimer ${def.name}`);
       item.append(del);
     }
@@ -504,10 +506,10 @@ updateChampionButton();
 if (reducedMotion) {
   els.overlayText.textContent =
     'Votre système demande des animations réduites : la simulation ne démarre que sur votre ordre.';
-  els.overlayAction.textContent = '▶ Démarrer la simulation';
+  els.overlayAction.textContent = 'Démarrer la simulation';
   els.overlayAction.hidden = false;
   els.overlay.hidden = false;
-  els.play.textContent = '▶ Démarrer';
+  els.play.textContent = 'Lecture';
   els.overlayAction.addEventListener('click', () => {
     els.overlay.hidden = true;
     setRunning(true);

@@ -2,12 +2,31 @@
    police EMBARQUÉS dans le projet, jamais un CDN). */
 
 :root {
-  --bg: #04050a;
-  --panel: rgba(13, 17, 30, 0.88);
-  --line: #2b3454;
-  --text: #e8ecf7;
-  --muted: #a7b2d2;
-  --accent: #8ab4ff;
+  color-scheme: dark;
+
+  /* Shared demo tokens (same names and values as the site's dark mode). */
+  --color-bg: #101216;
+  --color-text: #e8eaee;
+  --color-muted: #9aa0ab;
+  --color-surface: #181b21;
+  --color-border: #2a2e36;
+  --color-accent: #8ab0ff;
+  --color-accent-contrast: #0c1f4d;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+
+  /* Local derivations (floating panels sit over the canvas). */
+  --surface-translucent: rgba(24, 27, 33, 0.88); /* --color-surface at 88% */
+  --overlay: rgba(16, 18, 22, 0.72); /* --color-bg at 72% */
+  --swatch-ring: rgba(232, 234, 238, 0.35); /* --color-text at 35% */
+
+  /* Semantic colours (not chrome, not scene). */
+  --danger-text: #ffb3b9;
+  --danger-border: #5b3038;
+  --danger-text-hover: #ffd4d8;
+  --danger-border-hover: #ff8591;
+  --white-pressed-bg: #f0f4ff; /* "white light" toggle shows white */
+  --white-pressed-text: #10141f;
 }
 
 * {
@@ -26,8 +45,9 @@ body {
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  line-height: 1.5;
+  background: var(--color-bg);
+  color: var(--color-text);
   display: flex;
   flex-direction: column;
   height: 100dvh;
@@ -37,21 +57,26 @@ body {
 
 button {
   font: inherit;
-  color: var(--muted);
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 0.4rem 0.7rem;
+  min-height: 44px;
   cursor: pointer;
 }
 
 button:hover {
-  color: var(--text);
-  border-color: var(--accent);
+  border-color: var(--color-muted);
+}
+
+input[type='range'] {
+  min-height: 44px;
+  accent-color: var(--color-accent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -75,7 +100,7 @@ button:hover {
   align-items: center;
   gap: 0.5rem 1rem;
   padding: 0.55rem 0.9rem;
-  border-bottom: 1px solid rgba(43, 52, 84, 0.6);
+  border-bottom: 1px solid var(--color-border);
 }
 
 h1 {
@@ -99,14 +124,13 @@ h1 {
 
 .scenes-label {
   font-size: 0.75rem;
-  color: var(--muted);
+  color: var(--color-muted);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .scenes button {
   padding: 0.25rem 0.7rem;
-  border-radius: 999px;
   font-size: 0.82rem;
 }
 
@@ -117,7 +141,7 @@ h1 {
 }
 
 #help-btn {
-  width: 2.1rem;
+  min-width: 44px;
   font-weight: 700;
 }
 
@@ -164,6 +188,7 @@ main {
   width: 4.3rem;
   padding: 0.5rem 0.25rem 0.4rem;
   font-size: 0.68rem;
+  background: var(--surface-translucent);
   backdrop-filter: blur(6px);
 }
 
@@ -178,9 +203,9 @@ main {
   position: absolute;
   right: 0.7rem;
   bottom: 0.7rem;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 12px;
+  background: var(--surface-translucent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 0.6rem 0.75rem;
   min-width: 13.5rem;
   backdrop-filter: blur(6px);
@@ -191,7 +216,7 @@ main {
   font-size: 0.85rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--color-muted);
 }
 
 .inspector-row {
@@ -210,9 +235,9 @@ main {
 }
 
 #white-btn[aria-pressed='true'] {
-  color: #10141f;
-  background: #f0f4ff;
-  border-color: #f0f4ff;
+  color: var(--white-pressed-text);
+  background: var(--white-pressed-bg);
+  border-color: var(--white-pressed-bg);
 }
 
 .lambda {
@@ -225,41 +250,50 @@ main {
 #lambda-slider {
   flex: 1;
   min-width: 6rem;
-  accent-color: var(--accent);
+}
+
+#lambda-value {
+  font-size: 0.8rem;
+  min-width: 3.4rem;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-muted);
 }
 
 #lambda-dot {
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid var(--swatch-ring);
   flex: none;
 }
 
 #delete-btn {
   margin-left: auto;
-  color: #ffb3b9;
-  border-color: #5b3038;
+  color: var(--danger-text);
+  border-color: var(--danger-border);
 }
 
 #delete-btn:hover {
-  border-color: #ff8591;
-  color: #ffd4d8;
+  border-color: var(--danger-border-hover);
+  color: var(--danger-text-hover);
 }
 
 /* ---- Help dialog ---- */
 
 dialog {
-  background: #0c1120;
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 14px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   padding: 1.1rem 1.3rem;
   max-width: min(28rem, 90vw);
 }
 
 dialog::backdrop {
-  background: rgba(2, 3, 8, 0.72);
+  /* Custom properties are not inherited by ::backdrop everywhere yet,
+     hence the literal fallback (same value as --overlay). */
+  background: var(--overlay, rgba(16, 18, 22, 0.72));
 }
 
 dialog h2 {
@@ -271,11 +305,11 @@ dialog p,
 dialog li {
   font-size: 0.92rem;
   line-height: 1.45;
-  color: var(--muted);
+  color: var(--color-muted);
 }
 
 dialog strong {
-  color: var(--text);
+  color: var(--color-text);
 }
 
 dialog ul {
@@ -290,9 +324,9 @@ dialog ul {
 kbd {
   font-family: inherit;
   font-size: 0.78rem;
-  background: #1a2238;
-  border: 1px solid var(--line);
-  border-radius: 5px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
   padding: 0.05rem 0.35rem;
 }
 
@@ -302,15 +336,14 @@ dialog form {
 }
 
 button.primary {
-  color: #0c1120;
-  background: var(--accent);
-  border-color: var(--accent);
+  color: var(--color-accent-contrast);
+  background: var(--color-accent);
+  border-color: var(--color-accent);
   font-weight: 600;
 }
 
 button.primary:hover {
-  color: #0c1120;
-  background: #a9c8ff;
+  border-color: var(--color-muted);
 }
 
 /* ---- Footer ---- */
@@ -322,11 +355,11 @@ footer {
 }
 
 footer a {
-  color: var(--muted);
+  color: var(--color-muted);
 }
 
 footer a:hover {
-  color: var(--text);
+  color: var(--color-text);
 }
 
 /* ---- Narrow screens: toolbar docks to the bottom ---- */

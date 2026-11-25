@@ -1,15 +1,21 @@
 /* RÈGLE PORTFOLIO — polices système uniquement (ou des fichiers de
    police EMBARQUÉS dans le projet, jamais un CDN). */
 
+/* Shared tokens — same names and values as the portfolio dark theme
+   (demo charter). Scene colors (canvas background, grid, cells) live in
+   the JS renderer and are the demo's own identity. */
 :root {
-  --bg: #0b0e13;
-  --surface: #141922;
-  --surface-2: #1b212c;
-  --border: #2c3442;
-  --text: #e8edf4;
-  --text-dim: #9aa7b8;
-  --accent: #6ee7b7;
-  --accent-text: #052015;
+  --color-bg: #101216;
+  --color-text: #e8eaee;
+  --color-muted: #9aa0ab;
+  --color-surface: #181b21;
+  --color-border: #2a2e36;
+  --color-accent: #8ab0ff;
+  --color-accent-contrast: #0c1f4d;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  /* Local derived variable: slightly raised surface for <kbd> chips. */
+  --surface-raised: color-mix(in srgb, var(--color-surface) 92%, var(--color-text));
   color-scheme: dark;
 }
 
@@ -20,8 +26,9 @@
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
+  line-height: 1.5;
+  background: var(--color-bg);
+  color: var(--color-text);
   display: grid;
   grid-template-rows: auto 1fr auto;
   height: 100vh;
@@ -37,8 +44,8 @@ body {
   gap: 1rem;
   flex-wrap: wrap;
   padding: 0.5rem 0.75rem;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
 }
 
 h1 {
@@ -57,7 +64,7 @@ h1 {
 .sep {
   width: 1px;
   align-self: stretch;
-  background: var(--border);
+  background: var(--color-border);
   margin: 0 0.2rem;
 }
 
@@ -65,27 +72,27 @@ button {
   font: inherit;
   font-size: 0.85rem;
   padding: 0.35rem 0.7rem;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--surface-2);
-  color: var(--text);
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
 }
 
 button:hover {
-  border-color: var(--text-dim);
+  border-color: var(--color-muted);
 }
 
 button[aria-pressed='true'] {
-  background: var(--accent);
-  color: var(--accent-text);
-  border-color: var(--accent);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  border-color: var(--color-accent);
   font-weight: 600;
 }
 
-:is(button, input, a, summary):focus-visible,
-canvas:focus-visible {
-  outline: 2px solid var(--accent);
+:focus-visible {
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 
@@ -94,18 +101,19 @@ canvas:focus-visible {
   align-items: center;
   gap: 0.4rem;
   font-size: 0.8rem;
-  color: var(--text-dim);
+  color: var(--color-muted);
 }
 
 .slider input[type='range'] {
   width: 6rem;
-  accent-color: var(--accent);
+  min-height: 44px;
+  accent-color: var(--color-accent);
 }
 
 .slider output {
   min-width: 4.5em;
   font-variant-numeric: tabular-nums;
-  color: var(--text);
+  color: var(--color-text);
 }
 
 /* ---- Stage: patterns panel + board -------------------------------- */
@@ -116,9 +124,12 @@ canvas:focus-visible {
   min-height: 0;
 }
 
+/* Docked full-height sidebar: no --radius-md on purpose — the charter
+   radius targets floating panels, and rounding a flush, edge-to-edge
+   panel would open gaps against the page edges. */
 .patterns {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
+  background: var(--color-surface);
+  border-right: 1px solid var(--color-border);
   padding: 0.6rem;
   overflow-y: auto;
   width: 11.5rem;
@@ -128,14 +139,14 @@ canvas:focus-visible {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--text-dim);
+  color: var(--color-muted);
   margin: 0 0 0.5rem;
 }
 
 .pattern-hint {
   font-size: 0.75rem;
   line-height: 1.35;
-  color: var(--text-dim);
+  color: var(--color-muted);
   margin: 0 0 0.5rem;
   min-height: 4em;
 }
@@ -181,16 +192,16 @@ canvas.panning {
   gap: 0.9rem;
   flex-wrap: wrap;
   padding: 0.35rem 0.7rem;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: 0.78rem;
-  color: var(--text-dim);
+  color: var(--color-muted);
   pointer-events: none;
 }
 
 .stats strong {
-  color: var(--text);
+  color: var(--color-text);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
 }
@@ -201,19 +212,24 @@ footer {
   text-align: center;
   padding: 0.45rem;
   font-size: 0.8rem;
-  background: var(--surface);
-  border-top: 1px solid var(--border);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
 }
 
 a {
-  color: var(--accent);
+  color: var(--color-accent);
+}
+
+/* Back-to-project link stays discreet (demo charter). */
+footer a {
+  color: var(--color-muted);
 }
 
 dialog {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   max-width: 34rem;
   padding: 1.2rem 1.5rem;
 }
@@ -236,8 +252,8 @@ dialog li {
 
 kbd {
   font-family: inherit;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   padding: 0.05rem 0.35rem;
   font-size: 0.85em;
@@ -258,7 +274,7 @@ kbd {
   .patterns {
     width: auto;
     border-right: none;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--color-border);
     padding: 0.4rem 0.6rem;
   }
 
