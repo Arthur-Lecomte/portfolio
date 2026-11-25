@@ -17,7 +17,7 @@ links:
 cover: ./cover.png
 coverAlt: "Démo sur fond sombre : un grand cœur au trait doré, aux trois quarts retracé par la machine à cercles — une grappe de petits cercles gris marque le stylo en cours de course — au-dessus des curseurs Cercles et Vitesse et des boutons d'exemples Croche, Étoile, Cœur et Éclair."
 featured: false
-draft: true # SEUL Arthur passe cette ligne à false — publier est sa décision
+draft: false # publié le 2026-11-24 sur décision d'Arthur
 thirdParty: [] # rien d'embarqué : JavaScript pur, formes d'exemple générées par le code
 aiNote: "Projet réalisé en dirigeant une IA : j'ai cadré, testé et tranché ; elle a écrit le gros du code."
 ---
