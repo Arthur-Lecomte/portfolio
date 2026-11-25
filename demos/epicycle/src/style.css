@@ -1,0 +1,179 @@
+/* RÈGLE PORTFOLIO — polices système uniquement (ou des fichiers de
+   police EMBARQUÉS dans le projet, jamais un CDN). */
+
+/* The demo deliberately stays dark in both color schemes: a luminous
+   trail on a near-black stage is the point. Text contrast meets AA. */
+
+:root {
+  --bg: #101216;
+  --stage: #0b0d12;
+  --panel: #171a21;
+  --border: #262b36;
+  --text: #e8eaee;
+  --muted: #a6afc0;
+  --accent: #ffc96b;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: 1fr auto;
+}
+
+main {
+  width: min(100% - 2rem, 58rem);
+  margin: 0 auto;
+  padding: 2rem 0 1rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+h1 {
+  margin: 0 0 0.4rem;
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+}
+
+.stage {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  max-height: 70vh;
+  background: var(--stage);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+/* Live region: JS toggles its text content, not its visibility, so that
+   screen readers announce the change. Empty text renders nothing. */
+#invite {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem 1.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1.1rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+input[type='range'] {
+  accent-color: var(--accent);
+  width: 9rem;
+}
+
+output {
+  min-width: 2.4ch;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input[type='checkbox'] {
+  accent-color: var(--accent);
+}
+
+button {
+  font: inherit;
+  padding: 0.45rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: #3a4150;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.9rem;
+  color: var(--muted);
+}
+
+.about {
+  margin: 1.5rem auto 0;
+  max-width: 44rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem 1rem;
+}
+
+.about summary {
+  cursor: pointer;
+}
+
+.about p {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+footer {
+  text-align: center;
+  padding: 1.25rem;
+}
+
+footer a {
+  color: var(--muted);
+}
+
+/* Sans animation, le curseur de vitesse n'a pas d'objet. */
+@media (prefers-reduced-motion: reduce) {
+  .row-speed {
+    display: none;
+  }
+}
