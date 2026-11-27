@@ -128,7 +128,7 @@ a:hover {
 }
 
 .site-header-inner {
-  max-width: var(--container);
+  max-width: var(--container-wide);
   margin: 0 auto;
   padding: var(--space-sm) var(--space-md);
   display: flex;
@@ -177,7 +177,37 @@ a:hover {
   color: var(--color-muted);
 }
 
+/*
+ * Breakout grid (full-bleed pattern): prose keeps the exact column it
+ * always had, centered in a wider shell. Only elements opting in with
+ * .wide (card grids, covers) claim the full shell on large screens —
+ * text never widens. .breakout re-creates the same columns inside a
+ * wrapper (e.g. an <article>) so its children can opt in too; the
+ * middle track formula makes both grids resolve to identical columns.
+ */
+main.container,
+.breakout {
+  display: grid;
+  grid-template-columns:
+    [wide-start] 1fr
+    [content-start] min(calc(var(--container) - 2 * var(--space-md)), 100%)
+    [content-end] 1fr
+    [wide-end];
+}
+
+main.container > *,
+.breakout > * {
+  grid-column: content;
+}
+
+main.container > .wide,
+main.container > .breakout,
+.breakout > .wide {
+  grid-column: wide;
+}
+
 main.container {
+  max-width: var(--container-wide);
   padding-top: var(--space-xl);
   padding-bottom: var(--space-2xl);
   flex: 1;
@@ -191,7 +221,7 @@ main.container {
 }
 
 .site-footer-inner {
-  max-width: var(--container);
+  max-width: var(--container-wide);
   margin: 0 auto;
   padding: var(--space-lg) var(--space-md);
   display: grid;

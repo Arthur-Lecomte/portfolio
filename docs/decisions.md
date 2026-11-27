@@ -3,6 +3,17 @@
 Trois lignes par décision : le problème, l'option retenue, pourquoi.
 Les plus récentes en haut.
 
+## 2026-11-26 — Mise en page grand écran (grille « breakout »)
+
+La colonne unique de 46rem faisait bandeau maigre sur grand écran. Retenu,
+d'après l'étude de sites de référence (Comeau, Sindre Sorhus, iA…) : le texte
+ne s'élargit jamais (65ch, lisibilité / WCAG 1.4.8) ; une coquille de 72rem
+accueille en-tête, pied, grilles de cartes et couvertures via une grille à
+colonnes nommées (pattern « full-bleed », classes .breakout/.wide) ; la typo
+monte de 6 %/12 % à 1600/1920px (paliers rem, zoom et préférences respectés) ;
+les grands espacements verticaux deviennent fluides (clamp). Zéro JS, zéro
+changement sous 1600px hormis les éléments .wide ; accueil à 3 cartes.
+
 ## 2026-11-25 — Charte d'interface des démos (« charte légère »)
 
 Les six démos avaient chacune leurs couleurs, libellés et aides : on

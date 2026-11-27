@@ -92,17 +92,42 @@
   --leading-tight: 1.15;
   --measure: 65ch;
 
-  /* Spacing and shape */
+  /* Spacing and shape. The two large steps are fluid: identical on
+     small screens, they grow with the viewport so wide screens get
+     more vertical breathing room without a breakpoint. */
   --space-2xs: 0.25rem;
   --space-xs: 0.5rem;
   --space-sm: 0.75rem;
   --space-md: 1.25rem;
   --space-lg: 2rem;
-  --space-xl: 3.25rem;
-  --space-2xl: 5rem;
+  --space-xl: clamp(3.25rem, 2.5rem + 1.5vw, 4.5rem);
+  --space-2xl: clamp(5rem, 3.5rem + 3vw, 7rem);
   --radius-sm: 6px;
   --radius-md: 8px;
+  /* Prose column (unchanged width) and the wider shell that the header,
+     footer, card grids and covers may use on large screens. */
   --container: 46rem;
+  --container-wide: 72rem;
+}
+
+/*
+ * Large screens get a slightly larger type scale (iA-style steps).
+ * Every layout width is in rem/ch, so the whole page scales with the
+ * root font size and the line length in characters stays identical.
+ * Steps are rem-based media queries: browser zoom and user font-size
+ * preferences keep working (media queries resolve rem against the
+ * initial font size, so 100rem/120rem = 1600px/1920px).
+ */
+@media (min-width: 100rem) {
+  html {
+    font-size: 106.25%;
+  }
+}
+
+@media (min-width: 120rem) {
+  html {
+    font-size: 112.5%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

@@ -43,7 +43,7 @@ const repoHref =
   (data.demo === 'internal' ? `${site.links.repo}/tree/main/demos/${slug}` : undefined);
 ---
 
-<article class="project">
+<article class="project breakout">
   <p>
     <a href={localizePath(locale, '/projets/')}>{strings.backToProjects}</a>
   </p>
@@ -61,8 +61,8 @@ const repoHref =
     src={data.cover}
     alt={text.coverAlt}
     widths={[640, 1280]}
-    sizes="(max-width: 48rem) 100vw, 44rem"
-    class="cover"
+    sizes="(max-width: 48rem) 100vw, 70rem"
+    class="cover wide"
   />
 
   <div class="actions">
@@ -150,6 +150,7 @@ const repoHref =
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     margin: var(--space-md) 0;
+    width: 100%;
   }
 
   .actions {

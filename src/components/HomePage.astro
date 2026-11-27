@@ -24,7 +24,8 @@ const intro = {
 
 const projects = await getPublishedProjects();
 const featured = projects.filter((p) => p.data.featured);
-const shown = (featured.length > 0 ? featured : projects).slice(0, 4);
+/* Three shown: one clean row in the wide three-column grid. */
+const shown = (featured.length > 0 ? featured : projects).slice(0, 3);
 const english = new Map(
   locale === 'en'
     ? await Promise.all(
@@ -58,9 +59,9 @@ const cvNote = locale === 'en' && !site.cv.en && site.cv.fr ? ` ${strings.cvFren
 </section>
 
 {projects.length > 0 && (
-  <section class="home-projects" aria-labelledby="projects-title">
+  <section class="home-projects breakout" aria-labelledby="projects-title">
     <h2 id="projects-title">{strings.projectsTitle}</h2>
-    <div class="card-grid">
+    <div class="card-grid wide">
       {shown.map((p) => (
         <ProjectCard locale={locale} project={p} english={english.get(p.id)} />
       ))}
@@ -110,7 +111,7 @@ const cvNote = locale === 'en' && !site.cv.en && site.cv.fr ? ` ${strings.cvFren
 
   .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
     gap: var(--space-md);
     margin-bottom: var(--space-md);
   }
