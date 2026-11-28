@@ -178,19 +178,20 @@ a:hover {
 }
 
 /*
- * Breakout grid (full-bleed pattern): prose keeps the exact column it
- * always had, centered in a wider shell. Only elements opting in with
- * .wide (card grids, covers) claim the full shell on large screens —
- * text never widens. .breakout re-creates the same columns inside a
- * wrapper (e.g. an <article>) so its children can opt in too; the
- * middle track formula makes both grids resolve to identical columns.
+ * Breakout grid (full-bleed pattern): prose keeps the exact column
+ * width it always had, anchored to the left edge of a wider shell so
+ * the whole page shares a single vertical alignment line with the
+ * header, card grids and covers; spare width goes to the right. Only
+ * elements opting in with .wide claim the full shell — text never
+ * widens. .breakout re-creates the same columns inside a wrapper
+ * (e.g. an <article>) so its children can opt in too; the first
+ * track's formula makes both grids resolve to identical columns.
  */
 main.container,
 .breakout {
   display: grid;
   grid-template-columns:
-    [wide-start] 1fr
-    [content-start] min(calc(var(--container) - 2 * var(--space-md)), 100%)
+    [wide-start content-start] min(calc(var(--container) - 2 * var(--space-md)), 100%)
     [content-end] 1fr
     [wide-end];
 }
